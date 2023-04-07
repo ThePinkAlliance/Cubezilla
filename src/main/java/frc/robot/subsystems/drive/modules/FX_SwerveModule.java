@@ -144,8 +144,12 @@ public class FX_SwerveModule implements SwerveModule {
   public void setDesiredState(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getState().angle);
 
+    /*
+     * I think dividing the desired velocity will work. NOTE: I would like to
+     * research and find out.
+     */
     double desiredVelocity = (state.speedMetersPerSecond / Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond)
-        * MAX_VELOCITY_DRIVE_TICKS;
+        * MAX_VELOCITY_DRIVE_TICKS / 100;
 
     driveMotor.set(ControlMode.Velocity,
         desiredVelocity);
