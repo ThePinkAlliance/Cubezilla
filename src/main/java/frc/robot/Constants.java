@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ThePinkAlliance.core.util.Gains;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -20,6 +21,7 @@ public class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.47;
+    public static final Gains kSteerGains = new Gains(0, 0, 0);
   }
 
   public static final class DriveConstants {
