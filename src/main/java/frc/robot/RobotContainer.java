@@ -4,15 +4,30 @@
 
 package frc.robot;
 
+import com.ThePinkAlliance.core.util.joystick.JoystickMap;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.JoystickDrive;
+import frc.robot.subsystems.drive.SwerveSubsystem;
 
 public class RobotContainer {
+  public final SwerveSubsystem swerveSubsystem;
+  public final Joystick driverJoystick;
+
   public RobotContainer() {
+    this.swerveSubsystem = new SwerveSubsystem();
+    this.driverJoystick = new Joystick(0);
+
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+    this.swerveSubsystem
+        .setDefaultCommand(new JoystickDrive(swerveSubsystem, () -> driverJoystick.getRawAxis(JoystickMap.LEFT_X_AXIS),
+            () -> driverJoystick.getRawAxis(JoystickMap.LEFT_Y_AXIS),
+            () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

@@ -24,6 +24,10 @@ public class Constants {
     public static final Gains kSteerGains = new Gains(0, 0, 0);
   }
 
+  public static final class OIConstants {
+    public static final double kJoystickDeadband = 0.05;
+  }
+
   public static final class DriveConstants {
 
     public static final double kTrackWidth = Units.inchesToMeters(23.75);

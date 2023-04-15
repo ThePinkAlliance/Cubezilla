@@ -15,7 +15,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -24,15 +23,15 @@ import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
 
-  SwerveModule frontLeftModule;
-  SwerveModule frontRightModule;
-  SwerveModule backLeftModule;
-  SwerveModule backRightModule;
+  private SwerveModule frontLeftModule;
+  private SwerveModule frontRightModule;
+  private SwerveModule backLeftModule;
+  private SwerveModule backRightModule;
 
-  SwerveDriveKinematics kinematics;
-  SwerveDrivePoseEstimator estimator;
+  private SwerveDriveKinematics kinematics;
+  private SwerveDrivePoseEstimator estimator;
 
-  AHRS gyro;
+  private AHRS gyro;
 
   /** Creates a new DrivetrainSubsystem. */
   public SwerveSubsystem() {
@@ -83,6 +82,14 @@ public class SwerveSubsystem extends SubsystemBase {
     return Math.IEEEremainder(gyro.getAngle(), 360);
   }
 
+  public void calibrateGyro() {
+    this.gyro.calibrate();
+  }
+
+  public void resetGyro() {
+    this.gyro.reset();
+  }
+
   public void setStates(ChassisSpeeds speeds) {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
@@ -90,6 +97,10 @@ public class SwerveSubsystem extends SubsystemBase {
     frontLeftModule.setDesiredState(states[1]);
     backRightModule.setDesiredState(states[2]);
     backRightModule.setDesiredState(states[3]);
+  }
+
+  public Pose2d getCurrentPose() {
+    return estimator.getEstimatedPosition();
   }
 
   @Override
