@@ -57,9 +57,7 @@ public class WPI_SwerveModule implements SwerveModule {
    */
   @Override
   public double getSteerPosition() {
-    double rad = Math.toRadians(canCoder.getAbsolutePosition()) - absoluteEncoderOffsetRad;
-
-    return rad;
+    return Math.toRadians(canCoder.getAbsolutePosition()) - absoluteEncoderOffsetRad;
   }
 
   @Override
