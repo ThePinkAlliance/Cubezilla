@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.ThePinkAlliance.core.util.joystick.JoystickMap;
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,11 +18,21 @@ public class RobotContainer {
   public final SwerveSubsystem swerveSubsystem;
   public final Joystick driverJoystick;
 
+  public PathPlannerTrajectory selectedTrajectory;
+
   public RobotContainer() {
     this.swerveSubsystem = new SwerveSubsystem();
     this.driverJoystick = new Joystick(0);
 
+    configureAuto();
     configureBindings();
+  }
+
+  private void configureAuto() {
+    this.selectedTrajectory = PathPlanner.loadPath("test",
+        new PathConstraints(Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond,
+            Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond
+                * Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond));
   }
 
   private void configureBindings() {
