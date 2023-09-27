@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.subsystems.drive.modules.REV_SwerveModule;
 import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
