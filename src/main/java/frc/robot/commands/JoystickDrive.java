@@ -61,7 +61,7 @@ public class JoystickDrive extends CommandBase {
     double xField = x * robotAngle.getCos() + y * robotAngle.getSin();
     double yField = x * robotAngle.getSin() + y * -robotAngle.getCos();
 
-    swerveSubsystem.setStates(new ChassisSpeeds(xField, yField, r));
+    swerveSubsystem.setStates(new ChassisSpeeds(x, y, r));
   }
 
   // Called once the command ends or is interrupted.

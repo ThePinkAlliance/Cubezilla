@@ -28,9 +28,9 @@ public class WPI_SwerveModule implements SwerveModule {
   public WPI_SwerveModule(int steerId, int driveId, int canCoderId, boolean invertDrive, boolean invertSteer,
       double absoluteEncoderOffsetRad,
       Gains steerGains, String network) {
-    this.canCoder = new WPI_CANCoder(canCoderId, network);
-    this.steerMotor = new WPI_TalonFX(steerId, network);
-    this.driveMotor = new WPI_TalonFX(driveId, network);
+    this.canCoder = new WPI_CANCoder(canCoderId);
+    this.steerMotor = new WPI_TalonFX(steerId);
+    this.driveMotor = new WPI_TalonFX(driveId);
 
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
 

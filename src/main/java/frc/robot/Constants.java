@@ -41,15 +41,15 @@ public class Constants {
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, kTrackWidth / 2));
 
-    public static final int kFrontLeftDriveMotorPort = 11;
-    public static final int kBackLeftDriveMotorPort = 15;
-    public static final int kFrontRightDriveMotorPort = 13;
-    public static final int kBackRightDriveMotorPort = 17;
+    public static final int kFrontLeftDriveMotorPort = 2;
+    public static final int kBackLeftDriveMotorPort = 8;
+    public static final int kFrontRightDriveMotorPort = 5;
+    public static final int kBackRightDriveMotorPort = 11;
 
-    public static final int kFrontLeftTurningMotorPort = 12;
-    public static final int kBackLeftTurningMotorPort = 16;
-    public static final int kFrontRightTurningMotorPort = 14;
-    public static final int kBackRightTurningMotorPort = 18;
+    public static final int kFrontLeftTurningMotorPort = 1;
+    public static final int kBackLeftTurningMotorPort = 7;
+    public static final int kFrontRightTurningMotorPort = 4;
+    public static final int kBackRightTurningMotorPort = 10;
 
     public static final boolean kFrontLeftTurningReversed = false;
     public static final boolean kBackLeftTurningReversed = false;
@@ -61,10 +61,10 @@ public class Constants {
     public static final boolean kFrontRightDriveEncoderReversed = true;
     public static final boolean kBackRightDriveEncoderReversed = true;
 
-    public static final int kFrontLeftDriveAbsoluteEncoderPort = 2;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 6;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 4;
-    public static final int kBackRightDriveAbsoluteEncoderPort = 8;
+    public static final int kFrontLeftDriveAbsoluteEncoderPort = 3;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 9;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 6;
+    public static final int kBackRightDriveAbsoluteEncoderPort = 12;
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
