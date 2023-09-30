@@ -12,10 +12,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveModule;
 
-/** Add your docs here. */
+/**
+ * Swerve module based off of the swerve drive specialties pod. A Falcon 500 is
+ * used for both steering and driving.
+ */
 public class WPI_SwerveModule implements SwerveModule {
   private PIDController steerController;
 
@@ -92,7 +96,7 @@ public class WPI_SwerveModule implements SwerveModule {
   public double getAbsoluteEncoderAngle() {
     double angle = canCoder.getAbsolutePosition();
 
-    angle *= (2.0 * Math.PI / 180);
+    angle *= (2 * Math.PI / 180);
     angle -= absoluteEncoderOffsetRad;
 
     return angle;
@@ -127,6 +131,9 @@ public class WPI_SwerveModule implements SwerveModule {
 
     double output = steerController.calculate(getSteerPosition(), state.angle.getRadians());
     steerMotor.set(ControlMode.PercentOutput, output);
+
+    SmartDashboard.putNumber(this.steerMotor.getDeviceID() + " Steer power", steerMotor.get());
+    SmartDashboard.putNumber(this.steerMotor.getDeviceID() + " Steer angle", steerController.getSetpoint());
   }
 
   @Override

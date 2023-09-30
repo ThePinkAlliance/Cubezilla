@@ -15,7 +15,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveModule;
 
-/** Add your docs here. */
+/**
+ * Swerve module with rev motor controllers for both steering and power.
+ * 
+ * This class could be used to create other rev based pods. For example you
+ * could create a swerve module with a neo for steering and a falcon for
+ * driving.
+ */
 public class REV_SwerveModule implements SwerveModule {
   private PIDController steerController;
 
@@ -27,8 +33,8 @@ public class REV_SwerveModule implements SwerveModule {
 
   public REV_SwerveModule(int steerId, int driveId, int canCoderId, boolean invertDrive, boolean invertSteer,
       double absoluteEncoderOffsetRad,
-      Gains steerGains, String network) {
-    this.canCoder = new WPI_CANCoder(canCoderId, network);
+      Gains steerGains) {
+    this.canCoder = new WPI_CANCoder(canCoderId);
     this.steerMotor = new CANSparkMax(steerId, MotorType.kBrushless);
     this.driveMotor = new CANSparkMax(driveId, MotorType.kBrushless);
 

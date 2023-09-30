@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.subsystems.drive.modules.REV_SwerveModule;
 import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -38,6 +37,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new DrivetrainSubsystem. */
   public SwerveSubsystem() {
     gyro = new AHRS(SPI.Port.kMXP);
+
     this.frontRightModule = new WPI_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
         DriveConstants.kFrontRightDriveMotorPort, DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
         DriveConstants.kFrontRightDriveEncoderReversed, DriveConstants.kFrontRightTurningReversed,
@@ -89,6 +89,10 @@ public class SwerveSubsystem extends SubsystemBase {
     this.gyro.calibrate();
   }
 
+  public void setGyro(double angle) {
+    this.gyro.setAngleAdjustment(angle);
+  }
+
   public void resetGyro() {
     this.gyro.reset();
   }
@@ -99,7 +103,7 @@ public class SwerveSubsystem extends SubsystemBase {
     frontRightModule.setDesiredState(states[0]);
     frontLeftModule.setDesiredState(states[1]);
     backRightModule.setDesiredState(states[2]);
-    backRightModule.setDesiredState(states[3]);
+    backLeftModule.setDesiredState(states[3]);
   }
 
   public Pose2d getCurrentPose() {

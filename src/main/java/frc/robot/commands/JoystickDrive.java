@@ -37,6 +37,8 @@ public class JoystickDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // swerveSubsystem.resetGyro();
+    swerveSubsystem.setGyro(-90);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

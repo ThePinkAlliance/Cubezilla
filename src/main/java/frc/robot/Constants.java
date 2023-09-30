@@ -21,7 +21,7 @@ public class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.47;
-    public static final Gains kSteerGains = new Gains(0, 0, 0);
+    public static final Gains kSteerGains = new Gains(0.5, 0, 0);
   }
 
   public static final class OIConstants {
@@ -57,7 +57,7 @@ public class Constants {
     public static final boolean kBackRightTurningReversed = false;
 
     public static final boolean kFrontLeftDriveEncoderReversed = true;
-    public static final boolean kBackLeftDriveEncoderReversed = false;
+    public static final boolean kBackLeftDriveEncoderReversed = true;
     public static final boolean kFrontRightDriveEncoderReversed = true;
     public static final boolean kBackRightDriveEncoderReversed = true;
 
@@ -75,10 +75,10 @@ public class Constants {
      * These values where determined by lining up all the wheels and recording the
      * outputed positions.
      */
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 1.90; // 1.9036
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -1.92; // 1.9236
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 1.56; // 1.5615
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.49; // 1.49563
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -6.27; // 1.9036
+    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0.40; // -1.9236
+    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.92; // 1.5615
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -2.62; // 1.49563
 
     // This is the max speed without load.
     public static final double kPhysicalMaxSpeedMetersPerSecond = 6;
