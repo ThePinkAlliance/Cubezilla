@@ -35,7 +35,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private AHRS gyro;
 
-  /** Creates a new DrivetrainSubsystem. */
+  /**
+   * Creates a Swerve subsystem with the added kinematics.
+   * 
+   * @param kinematics
+   */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
 
