@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
@@ -35,7 +36,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS gyro;
 
   /** Creates a new DrivetrainSubsystem. */
-  public SwerveSubsystem() {
+  public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
 
     this.frontRightModule = new WPI_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
@@ -58,11 +59,7 @@ public class SwerveSubsystem extends SubsystemBase {
         DriveConstants.kBackLeftDriveEncoderReversed, DriveConstants.kBackLeftTurningReversed,
         DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
 
-    this.kinematics = new SwerveDriveKinematics(
-        new Translation2d(DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2),
-        new Translation2d(-DriveConstants.kTrackWidth / 2, DriveConstants.kWheelBase / 2),
-        new Translation2d(DriveConstants.kTrackWidth / 2, -DriveConstants.kWheelBase / 2),
-        new Translation2d(-DriveConstants.kTrackWidth / 2, -DriveConstants.kWheelBase / 2));
+    this.kinematics = kinematics;
 
     this.estimator = new SwerveDrivePoseEstimator(
         kinematics, getRotation(), new SwerveModulePosition[] { frontRightModule.getPosition(),
@@ -99,6 +96,16 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setStates(ChassisSpeeds speeds) {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
+
+    SmartDashboard.putNumber("Desired Front Left Angle", states[1].angle.getDegrees());
+    SmartDashboard.putNumber("Desired Front Right Angle", states[0].angle.getDegrees());
+    SmartDashboard.putNumber("Desired Back Left Angle", states[2].angle.getDegrees());
+    SmartDashboard.putNumber("Desired Back Right Angle", states[3].angle.getDegrees());
+
+    SmartDashboard.putNumber("Desired Front Left Power", states[1].speedMetersPerSecond);
+    SmartDashboard.putNumber("Desired Front Right Power", states[0].speedMetersPerSecond);
+    SmartDashboard.putNumber("Desired Back Left Power", states[2].speedMetersPerSecond);
+    SmartDashboard.putNumber("Desired Back Right Power", states[3].speedMetersPerSecond);
 
     frontRightModule.setDesiredState(states[0]);
     frontLeftModule.setDesiredState(states[1]);

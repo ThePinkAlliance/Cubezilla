@@ -36,10 +36,10 @@ public class Constants {
 
     // Distance between front and back wheels
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+        new Translation2d(kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-        new Translation2d(kWheelBase / 2, kTrackWidth / 2));
+        new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     public static final int kFrontLeftDriveMotorPort = 2;
     public static final int kBackLeftDriveMotorPort = 8;
@@ -75,10 +75,10 @@ public class Constants {
      * These values where determined by lining up all the wheels and recording the
      * outputed positions.
      */
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -6.27; // 1.9036
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 6.27; // 1.9036
     public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0.40; // -1.9236
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.92; // 1.5615
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -2.62; // 1.49563
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2.62; // 1.49563
 
     // This is the max speed without load.
     public static final double kPhysicalMaxSpeedMetersPerSecond = 6;

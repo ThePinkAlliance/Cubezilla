@@ -21,7 +21,7 @@ public class RobotContainer {
   public PathPlannerTrajectory selectedTrajectory;
 
   public RobotContainer() {
-    this.swerveSubsystem = new SwerveSubsystem();
+    this.swerveSubsystem = new SwerveSubsystem(Constants.DriveConstants.kDriveKinematics);
     this.driverJoystick = new Joystick(0);
 
     configureAuto();

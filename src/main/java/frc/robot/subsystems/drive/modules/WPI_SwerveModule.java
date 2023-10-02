@@ -131,9 +131,6 @@ public class WPI_SwerveModule implements SwerveModule {
 
     double output = steerController.calculate(getSteerPosition(), state.angle.getRadians());
     steerMotor.set(ControlMode.PercentOutput, output);
-
-    SmartDashboard.putNumber(this.steerMotor.getDeviceID() + " Steer power", steerMotor.get());
-    SmartDashboard.putNumber(this.steerMotor.getDeviceID() + " Steer angle", steerController.getSetpoint());
   }
 
   @Override

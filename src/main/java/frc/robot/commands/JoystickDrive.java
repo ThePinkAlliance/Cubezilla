@@ -38,7 +38,7 @@ public class JoystickDrive extends CommandBase {
   @Override
   public void initialize() {
     // swerveSubsystem.resetGyro();
-    swerveSubsystem.setGyro(-90);
+    swerveSubsystem.setGyro(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -63,7 +63,7 @@ public class JoystickDrive extends CommandBase {
     double xField = x * robotAngle.getCos() + y * robotAngle.getSin();
     double yField = x * robotAngle.getSin() + y * -robotAngle.getCos();
 
-    swerveSubsystem.setStates(new ChassisSpeeds(x, y, r));
+    swerveSubsystem.setStates(new ChassisSpeeds(xField, yField, r));
   }
 
   // Called once the command ends or is interrupted.
