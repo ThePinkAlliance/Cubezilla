@@ -37,8 +37,7 @@ public class JoystickDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // swerveSubsystem.resetGyro();
-    swerveSubsystem.setGyro(0);
+    swerveSubsystem.resetGyro();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -60,8 +59,8 @@ public class JoystickDrive extends CommandBase {
 
     // Convert from robot centric to field centric.
     Rotation2d robotAngle = swerveSubsystem.getRotation();
-    double xField = x * robotAngle.getCos() + y * robotAngle.getSin();
-    double yField = x * robotAngle.getSin() + y * -robotAngle.getCos();
+    double xField = x * robotAngle.getSin() + y * robotAngle.getCos();
+    double yField = x * robotAngle.getCos() + y * robotAngle.getSin();
 
     swerveSubsystem.setStates(new ChassisSpeeds(xField, yField, r));
   }

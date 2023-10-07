@@ -21,14 +21,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.subsystems.drive.modules.REV_SwerveModule;
 import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
+import edu.wpi.first.math.util.Units;
 
 public class SwerveSubsystem extends SubsystemBase {
 
-  private SwerveModule frontLeftModule;
-  private SwerveModule frontRightModule;
-  private SwerveModule backLeftModule;
-  private SwerveModule backRightModule;
+  public SwerveModule frontLeftModule;
+  public SwerveModule frontRightModule;
+  public SwerveModule backLeftModule;
+  public SwerveModule backRightModule;
 
   private SwerveDriveKinematics kinematics;
   private SwerveDrivePoseEstimator estimator;
@@ -43,25 +45,25 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
 
-    this.frontRightModule = new WPI_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
+    this.frontRightModule = new REV_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
         DriveConstants.kFrontRightDriveMotorPort, DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
         DriveConstants.kFrontRightDriveEncoderReversed, DriveConstants.kFrontRightTurningReversed,
-        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
-    this.frontLeftModule = new WPI_SwerveModule(DriveConstants.kFrontLeftTurningMotorPort,
+    this.frontLeftModule = new REV_SwerveModule(DriveConstants.kFrontLeftTurningMotorPort,
         DriveConstants.kFrontLeftDriveMotorPort, DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
         DriveConstants.kFrontLeftDriveEncoderReversed, DriveConstants.kFrontLeftTurningReversed,
-        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
-    this.backRightModule = new WPI_SwerveModule(DriveConstants.kBackRightTurningMotorPort,
+    this.backRightModule = new REV_SwerveModule(DriveConstants.kBackRightTurningMotorPort,
         DriveConstants.kBackRightDriveMotorPort, DriveConstants.kBackRightDriveAbsoluteEncoderPort,
         DriveConstants.kBackRightDriveEncoderReversed, DriveConstants.kBackRightTurningReversed,
-        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
-    this.backLeftModule = new WPI_SwerveModule(DriveConstants.kBackLeftTurningMotorPort,
+    this.backLeftModule = new REV_SwerveModule(DriveConstants.kBackLeftTurningMotorPort,
         DriveConstants.kBackLeftDriveMotorPort, DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
         DriveConstants.kBackLeftDriveEncoderReversed, DriveConstants.kBackLeftTurningReversed,
-        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
     this.kinematics = kinematics;
 
@@ -125,9 +127,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("Front Left Angle", frontLeftModule.getAbsoluteEncoderAngle());
-    SmartDashboard.putNumber("Front Right Angle", frontRightModule.getAbsoluteEncoderAngle());
-    SmartDashboard.putNumber("Back Left Angle", backLeftModule.getAbsoluteEncoderAngle());
-    SmartDashboard.putNumber("Back Right Angle", backRightModule.getAbsoluteEncoderAngle());
+    SmartDashboard.putNumber("Front Left Angle", (frontLeftModule.getAbsoluteEncoderAngle()));
+    SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getAbsoluteEncoderAngle()));
+    SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getAbsoluteEncoderAngle()));
+    SmartDashboard.putNumber("Back Right Angle", (backRightModule.getAbsoluteEncoderAngle()));
+
+    SmartDashboard.putNumber("Front Left Angle Raw", (frontLeftModule.getRawAbsoluteAngularPosition()));
+    SmartDashboard.putNumber("Front Right Angle Raw", (frontRightModule.getRawAbsoluteAngularPosition()));
+    SmartDashboard.putNumber("Back Left Angle Raw", (backLeftModule.getRawAbsoluteAngularPosition()));
+    SmartDashboard.putNumber("Back Right Angle Raw", (backRightModule.getRawAbsoluteAngularPosition()));
   }
 }

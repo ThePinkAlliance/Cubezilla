@@ -5,6 +5,7 @@
 package frc.robot.subsystems.drive.modules;
 
 import com.ThePinkAlliance.core.util.Gains;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -38,6 +39,9 @@ public class REV_SwerveModule implements SwerveModule {
     this.steerMotor = new CANSparkMax(steerId, MotorType.kBrushless);
     this.driveMotor = new CANSparkMax(driveId, MotorType.kBrushless);
 
+    this.steerMotor.restoreFactoryDefaults();
+    this.driveMotor.restoreFactoryDefaults();
+
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
 
     this.steerController = new PIDController(steerGains.kP, steerGains.kI, steerGains.kD);
@@ -45,6 +49,8 @@ public class REV_SwerveModule implements SwerveModule {
 
     this.driveMotor.setInverted(invertDrive);
     this.steerMotor.setInverted(invertSteer);
+
+    this.canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
     resetEncoders();
   }
@@ -78,9 +84,6 @@ public class REV_SwerveModule implements SwerveModule {
      * account the gear ratio.
      */
     return driveMotor.getEncoder().getVelocity() * 0.0015585245;
-    // return ((driveMotor.getEncoder().getVelocity() / 42.0) *
-    // Constants.ModuleConstants.kDriveMotorGearRatio)
-    // * (Constants.ModuleConstants.kWheelDiameterMeters * Math.PI);
   }
 
   /**
