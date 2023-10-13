@@ -44,12 +44,18 @@ public class Constants {
     public static final int kFrontLeftDriveMotorPort = 15;
     public static final int kBackLeftDriveMotorPort = 17;
     public static final int kFrontRightDriveMotorPort = 11;
-    public static final int kBackRightDriveMotorPort = 15;
+    public static final int kBackRightDriveMotorPort = 13;
 
     public static final int kFrontLeftTurningMotorPort = 16;
     public static final int kBackLeftTurningMotorPort = 18;
     public static final int kFrontRightTurningMotorPort = 12;
     public static final int kBackRightTurningMotorPort = 14;
+
+    public static final int armIntakeMotorPort = 20;
+
+    public static final int LeftArmRotateMotor = 21;
+    public static final int RightArmRotateMotor = 22;
+
 
     public static final boolean kFrontLeftTurningReversed = false;
     public static final boolean kBackLeftTurningReversed = false;
