@@ -56,7 +56,6 @@ public class Constants {
     public static final int LeftArmRotateMotor = 21;
     public static final int RightArmRotateMotor = 22;
 
-
     public static final boolean kFrontLeftTurningReversed = false;
     public static final boolean kBackLeftTurningReversed = false;
     public static final boolean kFrontRightTurningReversed = false;
@@ -81,10 +80,10 @@ public class Constants {
      * These values where determined by lining up all the wheels and recording the
      * outputed positions.
      */
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0;
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 3.06;
+    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.05;
+    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.71;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 5.27;
 
     // This is the max speed without load.
     public static final double kPhysicalMaxSpeedMetersPerSecond = 6;
