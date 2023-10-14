@@ -15,6 +15,8 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax leftSparxMax;
     private CANSparkMax rightSparxMax;
 
+    private int speedRange = 40;
+
     public void setDesiredPos(double desiredPos){
         final double leftNeoMax = -27.095;
         final double rightNeoMax = 27.0712;
@@ -36,6 +38,8 @@ public class ArmSubsystem extends SubsystemBase{
         rightSparxMax.follow(leftSparxMax, true);
 
         leftSparxMax.getPIDController().setP(1);
+
+        leftSparxMax.getPIDController().setOutputRange(-speedRange, speedRange);
     }
 
     public void periodic(){
