@@ -53,8 +53,8 @@ public class RobotContainer {
     //         () -> driverJoystick.getRawAxis(JoystickMap.LEFT_Y_AXIS),
     //         () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
 
-    new JoystickButton(towerJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, 0.9)).onFalse(new Intake(intakeSubsystem,0));
-    new JoystickButton(towerJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, -0.9)).onFalse(new Intake(intakeSubsystem,0));
+    new JoystickButton(towerJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, -0.3)).onFalse(new Intake(intakeSubsystem,0));
+    new JoystickButton(towerJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, 1)).onFalse(new Intake(intakeSubsystem,0));
     
 
     

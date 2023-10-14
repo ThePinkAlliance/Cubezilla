@@ -19,6 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
     this.motor = new TalonFX(20);
+    this.motor.setInverted(true);
   }
 
   @Override
