@@ -14,22 +14,26 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Intake;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.arm.ArmPivot;
+import frc.robot.subsystems.drive.IntakeSubsystem;
 import frc.robot.subsystems.drive.SwerveSubsystem;
 import frc.robot.subsystems.drive.arm.ArmSubsystem;
 
 public class RobotContainer {
   public final SwerveSubsystem swerveSubsystem;
   public final ArmSubsystem armSubsystem;
+  public final IntakeSubsystem intakeSubsystem;
   public final Joystick driverJoystick;
 
   public PathPlannerPath selectedTrajectory;
 
   public RobotContainer() {
     this.swerveSubsystem = new SwerveSubsystem(Constants.DriveConstants.kDriveKinematics);
-    this.armSubsystem = new ArmSubsystem();
+    this.intakeSubsystem = new IntakeSubsystem();
     this.driverJoystick = new Joystick(0);
+    this.armSubsystem = new ArmSubsystem();
 
     configureAuto();
     configureBindings();
@@ -46,6 +50,9 @@ public class RobotContainer {
             () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
     new JoystickButton(driverJoystick, JoystickMap.BUTTON_A).onTrue(new ArmPivot(armSubsystem, -27));
     new JoystickButton(driverJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -15));
+
+    new JoystickButton(driverJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, 1)).onFalse(new Intake(intakeSubsystem, 0));
+    new JoystickButton(driverJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, -1)).onFalse(new Intake(intakeSubsystem, 0));
 
   }
 
