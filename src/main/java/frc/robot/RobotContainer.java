@@ -13,6 +13,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.arm.ArmPivot;
 import frc.robot.subsystems.drive.SwerveSubsystem;
@@ -43,8 +44,8 @@ public class RobotContainer {
         .setDefaultCommand(new JoystickDrive(swerveSubsystem, () -> driverJoystick.getRawAxis(JoystickMap.LEFT_X_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.LEFT_Y_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
-    new JoystickButton(driverJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -27.095));
-    new JoystickButton(driverJoystick, JoystickMap.BUTTON_A).onTrue(new ArmPivot(armSubsystem, -15));
+    new JoystickButton(driverJoystick, JoystickMap.BUTTON_A).onTrue(new ArmPivot(armSubsystem, -27));
+    new JoystickButton(driverJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -15));
 
   }
 

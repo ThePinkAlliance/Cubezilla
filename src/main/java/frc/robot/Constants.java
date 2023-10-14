@@ -37,10 +37,10 @@ public class Constants {
 
     // Distance between front and back wheels
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-        new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+        new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
     public static final int kFrontLeftDriveMotorPort = 15;
     public static final int kBackLeftDriveMotorPort = 17;
@@ -62,7 +62,7 @@ public class Constants {
     public static final boolean kFrontRightTurningReversed = false;
     public static final boolean kBackRightTurningReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = false;
+    public static final boolean kFrontLeftDriveEncoderReversed = true;
     public static final boolean kBackLeftDriveEncoderReversed = true;
     public static final boolean kFrontRightDriveEncoderReversed = true;
     public static final boolean kBackRightDriveEncoderReversed = true;

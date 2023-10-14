@@ -15,13 +15,15 @@ public class ArmSubsystem extends SubsystemBase{
     private CANSparkMax leftSparxMax;
     private CANSparkMax rightSparxMax;
 
-    private int speedRange = 40;
+    private double speedRange = .25;
 
     public void setDesiredPos(double desiredPos){
+        
         final double leftNeoMax = -27.095;
         final double rightNeoMax = 27.0712;
         final double leftNeoMin = -15;
         final double rightNeoMin = 15;
+        
 
         leftSparxMax.getPIDController().setReference(desiredPos, CANSparkMax.ControlType.kPosition);
     }
@@ -32,14 +34,15 @@ public class ArmSubsystem extends SubsystemBase{
         this.leftSparxMax = new CANSparkMax(Constants.DriveConstants.LeftArmRotateMotor, MotorType.kBrushless);
         this.rightSparxMax = new CANSparkMax(Constants.DriveConstants.RightArmRotateMotor, MotorType.kBrushless);
 
+        leftSparxMax.getPIDController().setOutputRange(-speedRange, speedRange);
+
+
         leftSparxMax.getEncoder().setPosition(0);
         rightSparxMax.getEncoder().setPosition(0);
 
         rightSparxMax.follow(leftSparxMax, true);
 
         leftSparxMax.getPIDController().setP(1);
-
-        leftSparxMax.getPIDController().setOutputRange(-speedRange, speedRange);
     }
 
     public void periodic(){
