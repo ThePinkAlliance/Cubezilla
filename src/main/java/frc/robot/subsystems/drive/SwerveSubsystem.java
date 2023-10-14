@@ -10,7 +10,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -18,12 +17,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.robot.subsystems.drive.modules.REV_SwerveModule;
-import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
-import edu.wpi.first.math.util.Units;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -80,6 +76,11 @@ public class SwerveSubsystem extends SubsystemBase {
         backLeftModule.getPosition());
   }
 
+  public List<SwerveModuleState> getStates() {
+    return List.of(frontRightModule.getState(), frontLeftModule.getState(), backRightModule.getState(),
+        backLeftModule.getState());
+  }
+
   public Rotation2d getRotation() {
     return gyro.getRotation2d();
   }
@@ -117,6 +118,14 @@ public class SwerveSubsystem extends SubsystemBase {
     frontLeftModule.setDesiredState(states[1]);
     backRightModule.setDesiredState(states[2]);
     backLeftModule.setDesiredState(states[3]);
+  }
+
+  public void resetPose(Pose2d pose2d) {
+    estimator.resetPosition(getRotation(), (SwerveModulePosition[]) getPositions().toArray(), pose2d);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return kinematics.toChassisSpeeds((SwerveModuleState[]) getStates().toArray());
   }
 
   public Pose2d getCurrentPose() {
