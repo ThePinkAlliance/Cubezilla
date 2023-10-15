@@ -125,6 +125,11 @@ public class WPI_SwerveModule implements SwerveModule {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getSteerPosition()));
   }
 
+  @Override
+  public void logMotorSpeed(String title) {
+    SmartDashboard.putNumber(title, driveMotor.get());
+  }
+
   /**
    * Sets the current module state to the desired one.
    * 

@@ -6,6 +6,7 @@ package frc.robot.subsystems.drive;
 
 import java.util.List;
 
+import com.ThePinkAlliance.core.util.Gains;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -49,7 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
     this.frontLeftModule = new REV_SwerveModule(DriveConstants.kFrontLeftTurningMotorPort,
         DriveConstants.kFrontLeftDriveMotorPort, DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
         DriveConstants.kFrontLeftDriveEncoderReversed, DriveConstants.kFrontLeftTurningReversed,
-        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, new Gains(.6, 0, 0));
 
     this.backRightModule = new REV_SwerveModule(DriveConstants.kBackRightTurningMotorPort,
         DriveConstants.kBackRightDriveMotorPort, DriveConstants.kBackRightDriveAbsoluteEncoderPort,
@@ -113,6 +114,14 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Desired Front Right Power", states[0].speedMetersPerSecond);
     SmartDashboard.putNumber("Desired Back Left Power", states[2].speedMetersPerSecond);
     SmartDashboard.putNumber("Desired Back Right Power", states[3].speedMetersPerSecond);
+
+    frontLeftModule.logMotorSpeed("front Left");
+    frontRightModule.logMotorSpeed("front Right");
+    backLeftModule.logMotorSpeed("back Left");
+    backRightModule.logMotorSpeed("back right");
+
+    states[1] = new SwerveModuleState(states[1].speedMetersPerSecond,
+        Rotation2d.fromDegrees(states[1].angle.getDegrees() - 180));
 
     frontRightModule.setDesiredState(states[0]);
     frontLeftModule.setDesiredState(states[1]);

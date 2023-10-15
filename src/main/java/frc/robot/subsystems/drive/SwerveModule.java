@@ -12,6 +12,8 @@ public interface SwerveModule {
 
   public double getSteerVelocity();
 
+  public void logMotorSpeed(String title);
+
   /**
    * Reset the drive & steer encoders.
    */

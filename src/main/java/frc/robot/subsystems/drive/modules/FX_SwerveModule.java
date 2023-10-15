@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveModule;
 
@@ -93,6 +94,11 @@ public class FX_SwerveModule implements SwerveModule {
      * account the gear ratio.
      */
     return driveMotor.getSelectedSensorVelocity() * 0.0015585245;
+  }
+
+  @Override
+  public void logMotorSpeed(String title) {
+    SmartDashboard.putNumber(title, driveMotor.get());
   }
 
   /**

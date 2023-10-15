@@ -21,7 +21,7 @@ public class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.47;
-    public static final Gains kSteerGains = new Gains(0.5, 0, 0);
+    public static final Gains kSteerGains = new Gains(.5, 0, 0);
   }
 
   public static final class OIConstants {
@@ -37,10 +37,10 @@ public class Constants {
 
     // Distance between front and back wheels
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-        new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+        new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
+        new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
     public static final int kFrontLeftDriveMotorPort = 15;
     public static final int kBackLeftDriveMotorPort = 17;
@@ -53,7 +53,6 @@ public class Constants {
     public static final int kBackRightTurningMotorPort = 14;
 
     public static final int armIntakeMotorPort = 20;
-
     public static final int LeftArmRotateMotor = 21;
     public static final int RightArmRotateMotor = 22;
 
@@ -72,7 +71,7 @@ public class Constants {
     public static final int kFrontRightDriveAbsoluteEncoderPort = 2;
     public static final int kBackRightDriveAbsoluteEncoderPort = 1;
 
-    public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
+    public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = true;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
@@ -81,7 +80,7 @@ public class Constants {
      * These values where determined by lining up all the wheels and recording the
      * outputed positions.
      */
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 3.06;
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -0.09;
     public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.05;
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.71;
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 5.27;
