@@ -26,6 +26,7 @@ public class RobotContainer {
   public final ArmSubsystem armSubsystem;
   public final IntakeSubsystem intakeSubsystem;
   public final Joystick driverJoystick;
+  public final Joystick towerJoystick;
 
   public PathPlannerPath selectedTrajectory;
 
@@ -33,6 +34,7 @@ public class RobotContainer {
     this.swerveSubsystem = new SwerveSubsystem(Constants.DriveConstants.kDriveKinematics);
     this.intakeSubsystem = new IntakeSubsystem();
     this.driverJoystick = new Joystick(0);
+    this.towerJoystick = new Joystick(1);
     this.armSubsystem = new ArmSubsystem();
 
     configureAuto();
@@ -48,11 +50,12 @@ public class RobotContainer {
         .setDefaultCommand(new JoystickDrive(swerveSubsystem, () -> driverJoystick.getRawAxis(JoystickMap.LEFT_X_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.LEFT_Y_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
-    new JoystickButton(driverJoystick, JoystickMap.BUTTON_A).onTrue(new ArmPivot(armSubsystem, -27));
-    new JoystickButton(driverJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -15));
+    new JoystickButton(towerJoystick, JoystickMap.BUTTON_A).onTrue(new ArmPivot(armSubsystem, -28));
+    new JoystickButton(towerJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -15));  
+    new JoystickButton(towerJoystick, JoystickMap.BUTTON_X).onTrue(new ArmPivot(armSubsystem, -1));
 
-    new JoystickButton(driverJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, 1)).onFalse(new Intake(intakeSubsystem, 0));
-    new JoystickButton(driverJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, -1)).onFalse(new Intake(intakeSubsystem, 0));
+    new JoystickButton(towerJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, 1)).onFalse(new Intake(intakeSubsystem, 0));
+    new JoystickButton(towerJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, -1)).onFalse(new Intake(intakeSubsystem, 0));
 
   }
 
