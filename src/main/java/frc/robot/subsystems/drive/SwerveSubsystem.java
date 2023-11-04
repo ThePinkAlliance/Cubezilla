@@ -50,7 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
     this.frontLeftModule = new REV_SwerveModule(DriveConstants.kFrontLeftTurningMotorPort,
         DriveConstants.kFrontLeftDriveMotorPort, DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
         DriveConstants.kFrontLeftDriveEncoderReversed, DriveConstants.kFrontLeftTurningReversed,
-        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, new Gains(.6, 0, 0));
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
     this.backRightModule = new REV_SwerveModule(DriveConstants.kBackRightTurningMotorPort,
         DriveConstants.kBackRightDriveMotorPort, DriveConstants.kBackRightDriveAbsoluteEncoderPort,
@@ -119,9 +119,6 @@ public class SwerveSubsystem extends SubsystemBase {
     frontRightModule.logMotorSpeed("front Right");
     backLeftModule.logMotorSpeed("back Left");
     backRightModule.logMotorSpeed("back right");
-
-    states[1] = new SwerveModuleState(states[1].speedMetersPerSecond,
-        Rotation2d.fromDegrees(states[1].angle.getDegrees() - 180));
 
     frontRightModule.setDesiredState(states[0]);
     frontLeftModule.setDesiredState(states[1]);
