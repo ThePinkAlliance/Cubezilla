@@ -6,6 +6,7 @@ package frc.robot.subsystems.drive;
 
 import java.util.List;
 
+import com.ThePinkAlliance.core.util.Gains;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -25,7 +26,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveModule frontLeftModule;
   public SwerveModule frontRightModule;
-  public SwerveModule backLeftModule;
+  public REV_SwerveModule backLeftModule;
   public SwerveModule backRightModule;
 
   private SwerveDriveKinematics kinematics;
@@ -106,7 +107,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Desired Front Left Angle", states[1].angle.getDegrees());
     SmartDashboard.putNumber("Desired Front Right Angle", states[0].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Back Left Angle", states[2].angle.getDegrees());
+    SmartDashboard.putNumber("Desired Back Left Angle", backLeftModule.getSteerPosition());
     SmartDashboard.putNumber("Desired Back Right Angle", states[3].angle.getDegrees());
 
     SmartDashboard.putNumber("Desired Front Left Power", states[1].speedMetersPerSecond);

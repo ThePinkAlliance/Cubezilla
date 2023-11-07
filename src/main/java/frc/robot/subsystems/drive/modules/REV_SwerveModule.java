@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveModule;
 
@@ -27,7 +28,7 @@ public class REV_SwerveModule implements SwerveModule {
   private PIDController steerController;
 
   private CANSparkMax driveMotor;
-  private CANSparkMax steerMotor;
+  public CANSparkMax steerMotor;
   private WPI_CANCoder canCoder;
 
   private double absoluteEncoderOffsetRad;

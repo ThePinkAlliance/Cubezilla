@@ -12,7 +12,6 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Intake;
 import frc.robot.commands.JoystickDrive;
@@ -51,11 +50,13 @@ public class RobotContainer {
             () -> driverJoystick.getRawAxis(JoystickMap.LEFT_Y_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
     new JoystickButton(towerJoystick, JoystickMap.BUTTON_A).onTrue(new ArmPivot(armSubsystem, -28));
-    new JoystickButton(towerJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -15));  
+    new JoystickButton(towerJoystick, JoystickMap.BUTTON_Y).onTrue(new ArmPivot(armSubsystem, -15));
     new JoystickButton(towerJoystick, JoystickMap.BUTTON_X).onTrue(new ArmPivot(armSubsystem, -1));
 
-    new JoystickButton(towerJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, 1)).onFalse(new Intake(intakeSubsystem, 0));
-    new JoystickButton(towerJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, -1)).onFalse(new Intake(intakeSubsystem, 0));
+    new JoystickButton(towerJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, 1))
+        .onFalse(new Intake(intakeSubsystem, 0));
+    new JoystickButton(towerJoystick, JoystickMap.LEFT_BUMPER).onTrue(new Intake(intakeSubsystem, -1))
+        .onFalse(new Intake(intakeSubsystem, 0));
 
   }
 
