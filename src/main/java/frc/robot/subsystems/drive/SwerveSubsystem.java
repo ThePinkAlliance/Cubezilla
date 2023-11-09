@@ -16,10 +16,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.lib.Dashboard;
 import frc.robot.subsystems.drive.modules.REV_SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -34,6 +37,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private AHRS gyro;
 
+  private Dashboard dashboard;
+
   /**
    * Creates a Swerve subsystem with the added kinematics.
    * 
@@ -41,6 +46,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
+    this.dashboard = new Dashboard("Swerve");
 
     this.frontRightModule = new REV_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
         DriveConstants.kFrontRightDriveMotorPort, DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
@@ -105,20 +111,15 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setStates(ChassisSpeeds speeds) {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
-    SmartDashboard.putNumber("Desired Front Left Angle", states[1].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Front Right Angle", states[0].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Back Left Angle", states[2].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Back Right Angle", states[3].angle.getDegrees());
+    dashboard.putObject("Desired Front Left Angle", states[1].angle.getDegrees());
+    dashboard.putObject("Desired Front Right Angle", states[0].angle.getDegrees());
+    dashboard.putObject("Desired Back Left Angle", states[2].angle.getDegrees());
+    dashboard.putObject("Desired Back Right Angle", states[3].angle.getDegrees());
 
-    SmartDashboard.putNumber("Desired Front Left Power", states[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("Desired Front Right Power", states[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("Desired Back Left Power", states[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("Desired Back Right Power", states[3].speedMetersPerSecond);
-
-    frontLeftModule.logMotorSpeed("front Left");
-    frontRightModule.logMotorSpeed("front Right");
-    backLeftModule.logMotorSpeed("back Left");
-    backRightModule.logMotorSpeed("back right");
+    dashboard.putObject("Desired Front Left Power", states[1].speedMetersPerSecond);
+    dashboard.putObject("Desired Front Right Power", states[0].speedMetersPerSecond);
+    dashboard.putObject("Desired Back Left Power", states[2].speedMetersPerSecond);
+    dashboard.putObject("Desired Back Right Power", states[3].speedMetersPerSecond);
 
     frontRightModule.setDesiredState(states[0]);
     frontLeftModule.setDesiredState(states[1]);
@@ -142,7 +143,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("Front Left Angle", (frontLeftModule.getAbsoluteEncoderAngle()));
+    // SmartDashboard.putNumber("Front Left Angle",
+    // (frontLeftModule.getAbsoluteEncoderAngle()));
     SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getAbsoluteEncoderAngle()));
     SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getAbsoluteEncoderAngle()));
     SmartDashboard.putNumber("Back Right Angle", (backRightModule.getAbsoluteEncoderAngle()));

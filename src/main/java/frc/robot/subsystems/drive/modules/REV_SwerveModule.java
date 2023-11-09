@@ -8,11 +8,14 @@ import com.ThePinkAlliance.core.util.Gains;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.REVPHSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -43,8 +46,13 @@ public class REV_SwerveModule implements SwerveModule {
     this.steerMotor.restoreFactoryDefaults();
     this.driveMotor.restoreFactoryDefaults();
 
+    // Add the motors to the simulator.
+    REVPhysicsSim.getInstance().addSparkMax(driveMotor, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(steerMotor, DCMotor.getNEO(1));
+
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
 
+    // Configure the steer PID Controller and set input limit to +PI & -PI
     this.steerController = new PIDController(steerGains.kP, steerGains.kI, steerGains.kD);
     this.steerController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -125,11 +133,6 @@ public class REV_SwerveModule implements SwerveModule {
   @Override
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getSteerPosition()));
-  }
-
-  @Override
-  public void logMotorSpeed(String title) {
-    SmartDashboard.putNumber(title, driveMotor.get());
   }
 
   /**

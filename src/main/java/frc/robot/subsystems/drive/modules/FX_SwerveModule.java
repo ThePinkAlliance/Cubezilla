@@ -96,11 +96,6 @@ public class FX_SwerveModule implements SwerveModule {
     return driveMotor.getSelectedSensorVelocity() * 0.0015585245;
   }
 
-  @Override
-  public void logMotorSpeed(String title) {
-    SmartDashboard.putNumber(title, driveMotor.get());
-  }
-
   /**
    * Returns the velocity of the steer motor in rad/sec.
    */
