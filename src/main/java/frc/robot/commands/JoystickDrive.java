@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveSubsystem;
@@ -37,6 +38,7 @@ public class JoystickDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    swerveSubsystem.calibrateGyro();
     swerveSubsystem.resetGyro();
   }
 
@@ -48,9 +50,9 @@ public class JoystickDrive extends CommandBase {
     double r = Math.abs(rotInput.get()) > Constants.OIConstants.kJoystickDeadband ? rotInput.get() : 0;
 
     // Square the controller input while preserving the sign.
-    x = Math.copySign(x * x, x);
-    y = Math.copySign(y * y, y);
-    r = Math.copySign(r * r, r);
+    x = Math.copySign(x * x, x) * -1;
+    y = Math.copySign(y * y, y) * -1;
+    r = Math.copySign(r * r, r) * -1;
 
     // Limit the max acceleration and convert to meters.
     x = xLimiter.calculate(x) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
@@ -59,6 +61,7 @@ public class JoystickDrive extends CommandBase {
 
     // Convert from robot centric to field centric.
     Rotation2d robotAngle = swerveSubsystem.getRotation();
+
     double xField = x * robotAngle.getSin() + y * robotAngle.getCos();
     double yField = x * robotAngle.getCos() + y * robotAngle.getSin();
 

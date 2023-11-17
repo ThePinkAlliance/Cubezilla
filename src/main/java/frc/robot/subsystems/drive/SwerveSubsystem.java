@@ -43,7 +43,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
-    this.dashboard = new Dashboard("Swerve");
+    this.dashboard = new Dashboard("/Shuffleboard/Swerve");
 
     this.frontRightModule = new REV_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
         DriveConstants.kFrontRightDriveMotorPort, DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
@@ -140,8 +140,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // SmartDashboard.putNumber("Front Left Angle",
-    // (frontLeftModule.getAbsoluteEncoderAngle()));
     SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getAbsoluteEncoderAngle()));
     SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getAbsoluteEncoderAngle()));
     SmartDashboard.putNumber("Back Right Angle", (backRightModule.getAbsoluteEncoderAngle()));
