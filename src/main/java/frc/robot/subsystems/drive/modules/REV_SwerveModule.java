@@ -5,13 +5,19 @@
 package frc.robot.subsystems.drive.modules;
 
 import com.ThePinkAlliance.core.util.Gains;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.REVPHSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.subsystems.drive.SwerveModule;
 
@@ -38,13 +44,25 @@ public class REV_SwerveModule implements SwerveModule {
     this.steerMotor = new CANSparkMax(steerId, MotorType.kBrushless);
     this.driveMotor = new CANSparkMax(driveId, MotorType.kBrushless);
 
+    this.steerMotor.restoreFactoryDefaults();
+    this.driveMotor.restoreFactoryDefaults();
+
+    // Add the motors to the simulator.
+    REVPhysicsSim.getInstance().addSparkMax(driveMotor, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(steerMotor, DCMotor.getNEO(1));
+
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
 
+    // Configure the steer PID Controller and set input limit to +PI & -PI
     this.steerController = new PIDController(steerGains.kP, steerGains.kI, steerGains.kD);
     this.steerController.enableContinuousInput(-Math.PI, Math.PI);
 
     this.driveMotor.setInverted(invertDrive);
     this.steerMotor.setInverted(invertSteer);
+
+    this.driveMotor.setIdleMode(IdleMode.kBrake);
+
+    this.canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
     resetEncoders();
   }
@@ -78,9 +96,6 @@ public class REV_SwerveModule implements SwerveModule {
      * account the gear ratio.
      */
     return driveMotor.getEncoder().getVelocity() * 0.0015585245;
-    // return ((driveMotor.getEncoder().getVelocity() / 42.0) *
-    // Constants.ModuleConstants.kDriveMotorGearRatio)
-    // * (Constants.ModuleConstants.kWheelDiameterMeters * Math.PI);
   }
 
   /**

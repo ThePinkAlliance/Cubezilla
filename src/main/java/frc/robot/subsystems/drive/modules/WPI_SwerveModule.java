@@ -6,7 +6,9 @@ package frc.robot.subsystems.drive.modules;
 
 import com.ThePinkAlliance.core.util.Gains;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -43,6 +45,11 @@ public class WPI_SwerveModule implements SwerveModule {
 
     this.driveMotor.setInverted(invertDrive);
     this.steerMotor.setInverted(invertSteer);
+
+    this.steerMotor.setNeutralMode(NeutralMode.Brake);
+    this.driveMotor.setNeutralMode(NeutralMode.Brake);
+
+    this.canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
     resetEncoders();
   }

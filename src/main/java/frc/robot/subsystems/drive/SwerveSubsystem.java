@@ -10,7 +10,6 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -18,22 +17,24 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
-import frc.robot.subsystems.drive.modules.WPI_SwerveModule;
+import frc.robot.lib.Dashboard;
+import frc.robot.subsystems.drive.modules.REV_SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
 
-  private SwerveModule frontLeftModule;
-  private SwerveModule frontRightModule;
-  private SwerveModule backLeftModule;
-  private SwerveModule backRightModule;
+  public SwerveModule frontLeftModule;
+  public SwerveModule frontRightModule;
+  public SwerveModule backLeftModule;
+  public SwerveModule backRightModule;
 
   private SwerveDriveKinematics kinematics;
   private SwerveDrivePoseEstimator estimator;
 
   private AHRS gyro;
+
+  private Dashboard dashboard;
 
   /**
    * Creates a Swerve subsystem with the added kinematics.
@@ -42,26 +43,27 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
+    this.dashboard = new Dashboard("Swerve");
 
-    this.frontRightModule = new WPI_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
+    this.frontRightModule = new REV_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
         DriveConstants.kFrontRightDriveMotorPort, DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
         DriveConstants.kFrontRightDriveEncoderReversed, DriveConstants.kFrontRightTurningReversed,
-        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
-    this.frontLeftModule = new WPI_SwerveModule(DriveConstants.kFrontLeftTurningMotorPort,
+    this.frontLeftModule = new REV_SwerveModule(DriveConstants.kFrontLeftTurningMotorPort,
         DriveConstants.kFrontLeftDriveMotorPort, DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
         DriveConstants.kFrontLeftDriveEncoderReversed, DriveConstants.kFrontLeftTurningReversed,
-        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
-    this.backRightModule = new WPI_SwerveModule(DriveConstants.kBackRightTurningMotorPort,
+    this.backRightModule = new REV_SwerveModule(DriveConstants.kBackRightTurningMotorPort,
         DriveConstants.kBackRightDriveMotorPort, DriveConstants.kBackRightDriveAbsoluteEncoderPort,
         DriveConstants.kBackRightDriveEncoderReversed, DriveConstants.kBackRightTurningReversed,
-        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
-    this.backLeftModule = new WPI_SwerveModule(DriveConstants.kBackLeftTurningMotorPort,
+    this.backLeftModule = new REV_SwerveModule(DriveConstants.kBackLeftTurningMotorPort,
         DriveConstants.kBackLeftDriveMotorPort, DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
         DriveConstants.kBackLeftDriveEncoderReversed, DriveConstants.kBackLeftTurningReversed,
-        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains, "base");
+        DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, ModuleConstants.kSteerGains);
 
     this.kinematics = kinematics;
 
@@ -71,11 +73,18 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeftModule
                 .getPosition() },
         new Pose2d());
+
+    calibrateGyro();
   }
 
   public List<SwerveModulePosition> getPositions() {
     return List.of(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(),
         backLeftModule.getPosition());
+  }
+
+  public List<SwerveModuleState> getStates() {
+    return List.of(frontRightModule.getState(), frontLeftModule.getState(), backRightModule.getState(),
+        backLeftModule.getState());
   }
 
   public Rotation2d getRotation() {
@@ -101,20 +110,28 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setStates(ChassisSpeeds speeds) {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
-    SmartDashboard.putNumber("Desired Front Left Angle", states[1].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Front Right Angle", states[0].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Back Left Angle", states[2].angle.getDegrees());
-    SmartDashboard.putNumber("Desired Back Right Angle", states[3].angle.getDegrees());
+    SmartDashboard.putNumber("Front Left Angle Setpoint", states[1].angle.getRadians());
+    SmartDashboard.putNumber("Front Right Angle Setpoint", states[0].angle.getRadians());
+    SmartDashboard.putNumber("Back Left Angle Setpoint", states[2].angle.getRadians());
+    SmartDashboard.putNumber("Back Right Angle Setpoint", states[3].angle.getRadians());
 
-    SmartDashboard.putNumber("Desired Front Left Power", states[1].speedMetersPerSecond);
-    SmartDashboard.putNumber("Desired Front Right Power", states[0].speedMetersPerSecond);
-    SmartDashboard.putNumber("Desired Back Left Power", states[2].speedMetersPerSecond);
-    SmartDashboard.putNumber("Desired Back Right Power", states[3].speedMetersPerSecond);
+    dashboard.putObject("Desired Front Left Power", states[1].speedMetersPerSecond);
+    dashboard.putObject("Desired Front Right Power", states[0].speedMetersPerSecond);
+    dashboard.putObject("Desired Back Left Power", states[2].speedMetersPerSecond);
+    dashboard.putObject("Desired Back Right Power", states[3].speedMetersPerSecond);
 
-    frontRightModule.setDesiredState(states[0]);
-    frontLeftModule.setDesiredState(states[1]);
-    backRightModule.setDesiredState(states[2]);
-    backLeftModule.setDesiredState(states[3]);
+    frontRightModule.setDesiredState(states[1]);
+    frontLeftModule.setDesiredState(states[0]);
+    backRightModule.setDesiredState(states[3]);
+    backLeftModule.setDesiredState(states[2]);
+  }
+
+  public void resetPose(Pose2d pose2d) {
+    estimator.resetPosition(getRotation(), (SwerveModulePosition[]) getPositions().toArray(), pose2d);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return kinematics.toChassisSpeeds((SwerveModuleState[]) getStates().toArray());
   }
 
   public Pose2d getCurrentPose() {
@@ -125,9 +142,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("Front Left Angle", frontLeftModule.getAbsoluteEncoderAngle());
-    SmartDashboard.putNumber("Front Right Angle", frontRightModule.getAbsoluteEncoderAngle());
-    SmartDashboard.putNumber("Back Left Angle", backLeftModule.getAbsoluteEncoderAngle());
-    SmartDashboard.putNumber("Back Right Angle", backRightModule.getAbsoluteEncoderAngle());
+    SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getSteerPosition()));
+    SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getSteerPosition()));
+    SmartDashboard.putNumber("Back Right Angle", (backRightModule.getSteerPosition()));
+    SmartDashboard.putNumber("Front Left Angle", (frontLeftModule.getSteerPosition()));
+
+    SmartDashboard.putNumber("Front Left Angle Raw", (frontLeftModule.getRawAbsoluteAngularPosition()));
+    SmartDashboard.putNumber("Front Right Angle Raw", (frontRightModule.getRawAbsoluteAngularPosition()));
+    SmartDashboard.putNumber("Back Left Angle Raw", (backLeftModule.getRawAbsoluteAngularPosition()));
+    SmartDashboard.putNumber("Back Right Angle Raw", (backRightModule.getRawAbsoluteAngularPosition()));
   }
 }
