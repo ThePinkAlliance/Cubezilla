@@ -38,7 +38,6 @@ public class JoystickDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    swerveSubsystem.calibrateGyro();
     swerveSubsystem.resetGyro();
   }
 
@@ -50,8 +49,8 @@ public class JoystickDrive extends CommandBase {
     double r = Math.abs(rotInput.get()) > Constants.OIConstants.kJoystickDeadband ? rotInput.get() : 0;
 
     // Square the controller input while preserving the sign.
-    x = Math.copySign(x * x, x) * -1;
-    y = Math.copySign(y * y, y) * -1;
+    x = Math.copySign(x * x, x) * 1;
+    y = Math.copySign(y * y, y) * 1;
     r = Math.copySign(r * r, r) * -1;
 
     // Limit the max acceleration and convert to meters.
@@ -63,7 +62,11 @@ public class JoystickDrive extends CommandBase {
     Rotation2d robotAngle = swerveSubsystem.getRotation();
 
     double xField = x * robotAngle.getSin() + y * robotAngle.getCos();
-    double yField = x * robotAngle.getCos() + y * robotAngle.getSin();
+    double yField = x * robotAngle.getCos() + y * -robotAngle.getSin();
+
+    SmartDashboard.putNumber("Robot Heading", robotAngle.getDegrees());
+    SmartDashboard.putNumber("xField", xField);
+    SmartDashboard.putNumber("yField", yField);
 
     swerveSubsystem.setStates(new ChassisSpeeds(xField, yField, r));
   }

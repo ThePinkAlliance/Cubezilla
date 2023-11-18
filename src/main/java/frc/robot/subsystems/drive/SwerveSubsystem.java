@@ -43,7 +43,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
-    this.dashboard = new Dashboard("/Shuffleboard/Swerve");
+    this.dashboard = new Dashboard("Swerve");
 
     this.frontRightModule = new REV_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
         DriveConstants.kFrontRightDriveMotorPort, DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
@@ -73,6 +73,8 @@ public class SwerveSubsystem extends SubsystemBase {
             backLeftModule
                 .getPosition() },
         new Pose2d());
+
+    calibrateGyro();
   }
 
   public List<SwerveModulePosition> getPositions() {
@@ -108,20 +110,20 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setStates(ChassisSpeeds speeds) {
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
-    dashboard.putObject("Desired Front Left Angle", states[1].angle.getDegrees());
-    dashboard.putObject("Desired Front Right Angle", states[0].angle.getDegrees());
-    dashboard.putObject("Desired Back Left Angle", states[2].angle.getDegrees());
-    dashboard.putObject("Desired Back Right Angle", states[3].angle.getDegrees());
+    SmartDashboard.putNumber("Front Left Angle Setpoint", states[1].angle.getRadians());
+    SmartDashboard.putNumber("Front Right Angle Setpoint", states[0].angle.getRadians());
+    SmartDashboard.putNumber("Back Left Angle Setpoint", states[2].angle.getRadians());
+    SmartDashboard.putNumber("Back Right Angle Setpoint", states[3].angle.getRadians());
 
     dashboard.putObject("Desired Front Left Power", states[1].speedMetersPerSecond);
     dashboard.putObject("Desired Front Right Power", states[0].speedMetersPerSecond);
     dashboard.putObject("Desired Back Left Power", states[2].speedMetersPerSecond);
     dashboard.putObject("Desired Back Right Power", states[3].speedMetersPerSecond);
 
-    frontRightModule.setDesiredState(states[0]);
-    frontLeftModule.setDesiredState(states[1]);
-    backRightModule.setDesiredState(states[2]);
-    backLeftModule.setDesiredState(states[3]);
+    frontRightModule.setDesiredState(states[1]);
+    frontLeftModule.setDesiredState(states[0]);
+    backRightModule.setDesiredState(states[3]);
+    backLeftModule.setDesiredState(states[2]);
   }
 
   public void resetPose(Pose2d pose2d) {
@@ -140,9 +142,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getAbsoluteEncoderAngle()));
-    SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getAbsoluteEncoderAngle()));
-    SmartDashboard.putNumber("Back Right Angle", (backRightModule.getAbsoluteEncoderAngle()));
+    SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getSteerPosition()));
+    SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getSteerPosition()));
+    SmartDashboard.putNumber("Back Right Angle", (backRightModule.getSteerPosition()));
+    SmartDashboard.putNumber("Front Left Angle", (frontLeftModule.getSteerPosition()));
 
     SmartDashboard.putNumber("Front Left Angle Raw", (frontLeftModule.getRawAbsoluteAngularPosition()));
     SmartDashboard.putNumber("Front Right Angle Raw", (frontRightModule.getRawAbsoluteAngularPosition()));
