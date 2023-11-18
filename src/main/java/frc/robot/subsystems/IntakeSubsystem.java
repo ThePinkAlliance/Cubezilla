@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  public TalonFX motor;
   public IntakeIOInputs inputs;
   public IntakeIO io;
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem(IntakeIO io) {
     this.inputs = new IntakeIOInputs();
-    this.motor.setInverted(true);
+    this.io = io;
   }
 
   @Override

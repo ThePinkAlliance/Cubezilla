@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -24,14 +25,16 @@ public class Robot extends LoggedRobot {
      * data.
      */
     if (Robot.isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
-      Logger.addDataReceiver(new NT4Publisher());
+      Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/"));
+      Logger.getInstance().addDataReceiver(new NT4Publisher());
     } else {
-      Logger.addDataReceiver(new WPILOGWriter(""));
-      Logger.addDataReceiver(new NT4Publisher());
+      Logger.getInstance().addDataReceiver(new WPILOGWriter(
+          LogFileUtil.addPathSuffix("C:\\Users\\capts\\Documents\\code\\FRC\\Cubezilla\\logs\\log.rlog",
+              "_sim")));
+      Logger.getInstance().addDataReceiver(new NT4Publisher());
     }
 
-    Logger.start();
+    Logger.getInstance().start();
 
     m_robotContainer = new RobotContainer();
   }

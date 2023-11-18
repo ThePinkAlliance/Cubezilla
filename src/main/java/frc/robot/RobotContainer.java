@@ -54,7 +54,7 @@ public class RobotContainer {
   }
 
   private void configureAuto() {
-    this.selectedTrajectory = PathPlannerPath.fromPathFile("test");
+    // this.selectedTrajectory = PathPlannerPath.fromPathFile("test");
   }
 
   private void configureBindings() {
@@ -74,16 +74,18 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
 
-    AutoBuilder.configureHolonomic(swerveSubsystem::getCurrentPose, swerveSubsystem::resetPose,
-        swerveSubsystem::getSpeeds, swerveSubsystem::setStates,
-        new HolonomicPathFollowerConfig(new PIDConstants(0), new PIDConstants(0),
-            Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond, Constants.DriveConstants.kBaseRadius,
-            new ReplanningConfig()),
-        swerveSubsystem);
+    // AutoBuilder.configureHolonomic(swerveSubsystem::getCurrentPose,
+    // swerveSubsystem::resetPose,
+    // swerveSubsystem::getSpeeds, swerveSubsystem::setStates,
+    // new HolonomicPathFollowerConfig(new PIDConstants(0), new PIDConstants(0),
+    // Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond,
+    // Constants.DriveConstants.kBaseRadius,
+    // new ReplanningConfig()),
+    // swerveSubsystem);
 
-    return AutoBuilder.followPathWithEvents(path);
-    // return Commands.print("Nothing here");
+    // return AutoBuilder.followPathWithEvents(path);
+    return Commands.print("Nothing here");
   }
 }
