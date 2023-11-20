@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.ThePinkAlliance.core.util.Gains;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
@@ -41,6 +44,16 @@ public class Constants {
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, kTrackWidth / 2));
+
+    /**
+     * HolonomicPathFollowerConfig gives pathplanner information about the
+     * drivetrain and
+     * specifies PID controllers in x & y axies.
+     */
+    public static HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(new PIDConstants(0),
+        new PIDConstants(0),
+        DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kBaseRadius,
+        new ReplanningConfig());
 
     public static final int kFrontLeftDriveMotorPort = 15;
     public static final int kBackLeftDriveMotorPort = 17;
