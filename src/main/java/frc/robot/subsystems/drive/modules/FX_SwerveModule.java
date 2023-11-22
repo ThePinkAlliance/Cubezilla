@@ -93,7 +93,7 @@ public class FX_SwerveModule implements SwerveModule {
      * It might be necessary to change the constant because it does not take into
      * account the gear ratio.
      */
-    return driveMotor.getSelectedSensorVelocity() * 0.0015585245;
+    return driveMotor.getSelectedSensorVelocity() * Constants.ModuleConstants.kDriveMotorGearRatio;
   }
 
   /**

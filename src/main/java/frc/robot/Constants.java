@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
 public class Constants {
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4.09);
-    public static final double kDriveMotorGearRatio = 1 / 8.14;
+    public static final double kDriveMotorGearRatio = 1 / 5.14;
     public static final double kTurningMotorGearRatio = 1 / 12.8;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI
         * kWheelDiameterMeters;
@@ -99,14 +99,14 @@ public class Constants {
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -1.00 - 3.14;// 5.27;
 
     // This is the max speed without load.
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 6;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 2.98704;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1; // 0.96
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
         / 2.8;
     public static double kTeleDriveSpeedReduction = 1;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 2.5;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 1.5;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.5;
   }
 }
