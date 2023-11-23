@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
  */
 @AutoLog
 public class IntakeIOInputs implements LoggableInputs {
-    public static double intakeVelocity;
+    public double intakeVelocity;
 
     @Override
     public void toLog(LogTable table) {
