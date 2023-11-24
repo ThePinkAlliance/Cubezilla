@@ -3,7 +3,7 @@ package frc.robot.subsystems.arm;
 import java.security.PublicKey;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
-
+import org.littletonrobotics.junction.Logger;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -14,20 +14,19 @@ public class ArmSubsystem extends SubsystemBase {
 
     private CANSparkMax leftSparxMax;
     private CANSparkMax rightSparxMax;
+    private ArmInputs inputs;
 
     private double speedRange = .25;
 
     public void setDesiredPos(double desiredPos) {
-
-        final double leftNeoMax = -27.095;
-        final double rightNeoMax = 27.0712;
-        final double leftNeoMin = -15;
-        final double rightNeoMin = 15;
-
         leftSparxMax.getPIDController().setReference(desiredPos, CANSparkMax.ControlType.kPosition);
+
+        inputs.armSetpoint = desiredPos;
     }
 
     public ArmSubsystem() {
+        this.inputs = new ArmInputs();
+
         this.leftSparxMax = new CANSparkMax(Constants.DriveConstants.LeftArmRotateMotor, MotorType.kBrushless);
         this.rightSparxMax = new CANSparkMax(Constants.DriveConstants.RightArmRotateMotor, MotorType.kBrushless);
 
@@ -37,7 +36,6 @@ public class ArmSubsystem extends SubsystemBase {
         rightSparxMax.getEncoder().setPosition(0);
 
         rightSparxMax.follow(leftSparxMax, true);
-
         leftSparxMax.getPIDController().setP(1);
     }
 
@@ -47,5 +45,9 @@ public class ArmSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("left Arm Neo Encoder Value", (leftArmEncoderValue));
         SmartDashboard.putNumber("Right Arm Neo Encoder Value", (rightArmEncoderValue));
+
+        inputs.armPosition = leftSparxMax.getEncoder().getPosition();
+
+        Logger.getInstance().processInputs("Arm", inputs);
     }
 }

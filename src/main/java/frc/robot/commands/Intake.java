@@ -6,11 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 public class Intake extends CommandBase {
   private IntakeSubsystem subsystem;
-  private TalonFX motor;
   private double speed;
 
   /** Creates a new Intake. */
