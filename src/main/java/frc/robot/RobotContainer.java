@@ -10,6 +10,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Intake;
@@ -26,19 +28,24 @@ public class RobotContainer {
   public final Joystick towerJoystick;
 
   public PathPlannerPath selectedTrajectory;
+  public SendableChooser<PathPlannerPath> chooser;
 
   public RobotContainer() {
     this.swerveSubsystem = new SwerveSubsystem(Constants.DriveConstants.kDriveKinematics);
     this.intakeSubsystem = new IntakeSubsystem();
     this.driverJoystick = new Joystick(0);
     this.towerJoystick = new Joystick(1);
+    this.chooser = new SendableChooser<>();
 
     configureAuto();
     configureBindings();
   }
 
   private void configureAuto() {
-    this.selectedTrajectory = PathPlannerPath.fromPathFile("test");
+    this.chooser.addOption("Test", PathPlannerPath.fromPathFile("Test"));
+    this.chooser.setDefaultOption("Crazy", PathPlannerPath.fromPathFile("crazy"));
+
+    SmartDashboard.putData(chooser);
   }
 
   private void configureBindings() {
@@ -55,7 +62,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
+    PathPlannerPath path = chooser.getSelected();
 
     // Sets the robot starting position the same as starting point on path.
     swerveSubsystem.resetPose(path.getStartingDifferentialPose());
