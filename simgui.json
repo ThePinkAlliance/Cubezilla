@@ -2,6 +2,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+<<<<<<< HEAD
       "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[3]": "PIDController",
@@ -23,6 +24,9 @@
       "SmartDashboard": {
         "open": true
       }
+=======
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
+>>>>>>> wpi-2k24-beta3
     }
   }
 }

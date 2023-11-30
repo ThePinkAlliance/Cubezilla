@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.drive.modules;
 
-import com.ThePinkAlliance.core.util.Gains;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -16,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.lib.Gains;
 import frc.robot.subsystems.drive.SwerveModule;
 
 /**

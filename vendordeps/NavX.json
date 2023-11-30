@@ -1,5 +1,6 @@
 {
     "fileName": "NavX.json",
+<<<<<<< HEAD
     "name": "KauaiLabs_navX_FRC",
     "version": "2023.0.3",
     "uuid": "cb311d09-36e9-4143-a032-55bb2b94443b",
@@ -7,11 +8,25 @@
         "https://dev.studica.com/maven/release/2023/"
     ],
     "jsonUrl": "https://dev.studica.com/releases/2023/NavX.json",
+=======
+    "name": "NavX",
+    "version": "2024.0.1-beta-4",
+    "uuid": "cb311d09-36e9-4143-a032-55bb2b94443b",
+    "frcYear": "2024",
+    "mavenUrls": [
+        "https://dev.studica.com/maven/release/2024/"
+    ],
+    "jsonUrl": "https://dev.studica.com/releases/2024/NavX.json",
+>>>>>>> wpi-2k24-beta3
     "javaDependencies": [
         {
             "groupId": "com.kauailabs.navx.frc",
             "artifactId": "navx-frc-java",
+<<<<<<< HEAD
             "version": "2023.0.3"
+=======
+            "version": "2024.0.1-beta-4"
+>>>>>>> wpi-2k24-beta3
         }
     ],
     "jniDependencies": [],
@@ -19,7 +34,11 @@
         {
             "groupId": "com.kauailabs.navx.frc",
             "artifactId": "navx-frc-cpp",
+<<<<<<< HEAD
             "version": "2023.0.3",
+=======
+            "version": "2024.0.1-beta-4",
+>>>>>>> wpi-2k24-beta3
             "headerClassifier": "headers",
             "sourcesClassifier": "sources",
             "sharedLibrary": false,
@@ -30,7 +49,11 @@
                 "linuxraspbian",
                 "linuxarm32",
                 "linuxarm64",
+<<<<<<< HEAD
                 "linux86-64",
+=======
+                "linuxx86-64",
+>>>>>>> wpi-2k24-beta3
                 "osxuniversal",
                 "windowsx86-64"
             ]

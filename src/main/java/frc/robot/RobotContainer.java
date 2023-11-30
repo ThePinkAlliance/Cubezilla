@@ -4,20 +4,19 @@
 
 package frc.robot;
 
-import com.ThePinkAlliance.core.util.joystick.JoystickMap;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Intake;
 import frc.robot.commands.JoystickDrive;
+import frc.robot.lib.JoystickMap;
 import frc.robot.subsystems.drive.IntakeSubsystem;
 import frc.robot.subsystems.drive.SwerveSubsystem;
 
@@ -29,19 +28,28 @@ public class RobotContainer {
   public final Joystick towerJoystick;
 
   public PathPlannerPath selectedTrajectory;
+  public SendableChooser<PathPlannerPath> chooser;
 
   public RobotContainer() {
     this.swerveSubsystem = new SwerveSubsystem(Constants.DriveConstants.kDriveKinematics);
     this.intakeSubsystem = new IntakeSubsystem();
     this.driverJoystick = new Joystick(0);
     this.towerJoystick = new Joystick(1);
+    this.chooser = new SendableChooser<>();
 
     configureAuto();
     configureBindings();
   }
 
   private void configureAuto() {
-    this.selectedTrajectory = PathPlannerPath.fromPathFile("test");
+    /*
+     * Using redundant fromPath methods in the event a path does not exist it will
+     * throw an error on startup instead of doing it before a match.
+     */
+    this.chooser.addOption("Test", PathPlannerPath.fromPathFile("Test"));
+    this.chooser.setDefaultOption("Crazy", PathPlannerPath.fromPathFile("crazy"));
+
+    SmartDashboard.putData(chooser);
   }
 
   private void configureBindings() {
@@ -58,18 +66,15 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
+    PathPlannerPath path = chooser.getSelected();
 
-    AutoBuilder.configureHolonomic(swerveSubsystem::getCurrentPose,
-        swerveSubsystem::resetPose,
-        swerveSubsystem::getSpeeds, swerveSubsystem::setStates,
-        Constants.DriveConstants.kPathFollowerConfig,
-        swerveSubsystem);
-
-    AutoBuilder.followPathWithEvents(path).schedule();
+    // Sets the robot starting position the same as starting point on path.
+    swerveSubsystem.resetPose(path.getStartingDifferentialPose());
 
     return new FollowPathCommand(path, swerveSubsystem::getCurrentPose, swerveSubsystem::getSpeeds,
-        swerveSubsystem::setStates, new PPHolonomicDriveController(new PIDConstants(0), new PIDConstants(0), 0, 0),
+        swerveSubsystem::setStates,
+        new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1),
+            Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond, Constants.DriveConstants.kBaseRadius),
         new ReplanningConfig(), swerveSubsystem);
   }
 }

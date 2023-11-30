@@ -95,14 +95,22 @@ public class SwerveSubsystem extends SubsystemBase {
         this);
   }
 
-  public List<SwerveModulePosition> getPositions() {
-    return List.of(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(),
-        backLeftModule.getPosition());
+  public SwerveModulePosition[] getPositions() {
+    return new SwerveModulePosition[] {
+        frontRightModule.getPosition(),
+        frontLeftModule.getPosition(),
+        backRightModule.getPosition(),
+        backLeftModule.getPosition()
+    };
   }
 
-  public List<SwerveModuleState> getStates() {
-    return List.of(frontRightModule.getState(), frontLeftModule.getState(), backRightModule.getState(),
-        backLeftModule.getState());
+  public SwerveModuleState[] getStates() {
+    return new SwerveModuleState[] {
+        frontRightModule.getState(),
+        frontLeftModule.getState(),
+        backRightModule.getState(),
+        backLeftModule.getState()
+    };
   }
 
   public Rotation2d getRotation() {
@@ -114,7 +122,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void calibrateGyro() {
-    this.gyro.calibrate();
   }
 
   public void setGyro(double angle) {
@@ -149,11 +156,11 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void resetPose(Pose2d pose2d) {
-    estimator.resetPosition(getRotation(), (SwerveModulePosition[]) getPositions().toArray(), pose2d);
+    estimator.resetPosition(getRotation(), getPositions(), pose2d);
   }
 
   public ChassisSpeeds getSpeeds() {
-    return kinematics.toChassisSpeeds((SwerveModuleState[]) getStates().toArray());
+    return kinematics.toChassisSpeeds(getStates());
   }
 
   public Pose2d getCurrentPose() {

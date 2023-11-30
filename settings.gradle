@@ -4,7 +4,11 @@ pluginManagement {
     repositories {
         mavenLocal()
         gradlePluginPortal()
+<<<<<<< HEAD
         String frcYear = '2023'
+=======
+        String frcYear = '2024'
+>>>>>>> wpi-2k24-beta3
         File frcHome
         if (OperatingSystem.current().isWindows()) {
             String publicFolder = System.getenv('PUBLIC')
@@ -25,3 +29,9 @@ pluginManagement {
         }
     }
 }
+<<<<<<< HEAD
+=======
+
+Properties props = System.getProperties();
+props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
+>>>>>>> wpi-2k24-beta3
