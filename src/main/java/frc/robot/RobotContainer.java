@@ -6,8 +6,14 @@ package frc.robot;
 
 import com.ThePinkAlliance.core.util.joystick.JoystickMap;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Intake;
@@ -54,7 +60,16 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     PathPlannerPath path = PathPlannerPath.fromPathFile("Test");
 
-    return AutoBuilder.followPathWithEvents(path);
-    // return Commands.print("Nothing here");
+    AutoBuilder.configureHolonomic(swerveSubsystem::getCurrentPose,
+        swerveSubsystem::resetPose,
+        swerveSubsystem::getSpeeds, swerveSubsystem::setStates,
+        Constants.DriveConstants.kPathFollowerConfig,
+        swerveSubsystem);
+
+    AutoBuilder.followPathWithEvents(path).schedule();
+
+    return new FollowPathCommand(path, swerveSubsystem::getCurrentPose, swerveSubsystem::getSpeeds,
+        swerveSubsystem::setStates, new PPHolonomicDriveController(new PIDConstants(0), new PIDConstants(0), 0, 0),
+        new ReplanningConfig(), swerveSubsystem);
   }
 }

@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -38,6 +39,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private SwerveDrivePoseEstimator estimator;
 
   private AHRS gyro;
+  private Field2d field2d;
 
   private Dashboard dashboard;
 
@@ -48,6 +50,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
     gyro = new AHRS(SPI.Port.kMXP);
+    this.field2d = new Field2d();
     this.dashboard = new Dashboard("Swerve");
 
     this.frontRightModule = new REV_SwerveModule(DriveConstants.kFrontRightTurningMotorPort,
@@ -118,6 +121,10 @@ public class SwerveSubsystem extends SubsystemBase {
     this.gyro.setAngleAdjustment(angle);
   }
 
+  public Field2d getField2d() {
+    return field2d;
+  }
+
   public void resetGyro() {
     this.gyro.reset();
   }
@@ -166,5 +173,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Angle Raw", (frontRightModule.getRawAbsoluteAngularPosition()));
     SmartDashboard.putNumber("Back Left Angle Raw", (backLeftModule.getRawAbsoluteAngularPosition()));
     SmartDashboard.putNumber("Back Right Angle Raw", (backRightModule.getRawAbsoluteAngularPosition()));
+
+    field2d.setRobotPose(getCurrentPose());
   }
 }
