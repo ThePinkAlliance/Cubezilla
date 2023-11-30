@@ -42,6 +42,10 @@ public class RobotContainer {
   }
 
   private void configureAuto() {
+    /*
+     * Using redundant fromPath methods in the event a path does not exist it will
+     * throw an error on startup instead of doing it before a match.
+     */
     this.chooser.addOption("Test", PathPlannerPath.fromPathFile("Test"));
     this.chooser.setDefaultOption("Crazy", PathPlannerPath.fromPathFile("crazy"));
 
