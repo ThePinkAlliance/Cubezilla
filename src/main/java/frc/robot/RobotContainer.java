@@ -8,11 +8,13 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Intake;
 import frc.robot.commands.JoystickDrive;
@@ -48,6 +50,7 @@ public class RobotContainer {
      */
     this.chooser.addOption("Test", PathPlannerPath.fromPathFile("Test"));
     this.chooser.setDefaultOption("Crazy", PathPlannerPath.fromPathFile("crazy"));
+    this.chooser.addOption("Straight", PathPlannerPath.fromPathFile("Straight"));
 
     SmartDashboard.putData(chooser);
   }
@@ -57,6 +60,9 @@ public class RobotContainer {
         .setDefaultCommand(new JoystickDrive(swerveSubsystem, () -> driverJoystick.getRawAxis(JoystickMap.LEFT_X_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.LEFT_Y_AXIS),
             () -> driverJoystick.getRawAxis(JoystickMap.RIGHT_X_AXIS)));
+
+    new JoystickButton(driverJoystick, JoystickMap.BUTTON_START)
+        .onTrue(Commands.runOnce(() -> swerveSubsystem.resetGyro()));
 
     new JoystickButton(towerJoystick, JoystickMap.RIGHT_BUMPER).onTrue(new Intake(intakeSubsystem, -0.3))
         .onFalse(new Intake(intakeSubsystem, 0));
@@ -73,7 +79,7 @@ public class RobotContainer {
 
     return new FollowPathCommand(path, swerveSubsystem::getCurrentPose, swerveSubsystem::getSpeeds,
         swerveSubsystem::setStates,
-        new PPHolonomicDriveController(new PIDConstants(1), new PIDConstants(1),
+        new PPHolonomicDriveController(new PIDConstants(.3), new PIDConstants(.3),
             Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond, Constants.DriveConstants.kBaseRadius),
         new ReplanningConfig(), swerveSubsystem);
   }

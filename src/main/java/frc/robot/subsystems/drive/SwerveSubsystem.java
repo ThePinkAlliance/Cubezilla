@@ -82,6 +82,8 @@ public class SwerveSubsystem extends SubsystemBase {
                 .getPosition() },
         new Pose2d());
 
+    SmartDashboard.putData("Field", field2d);
+
     calibrateGyro();
   }
 
@@ -153,6 +155,8 @@ public class SwerveSubsystem extends SubsystemBase {
     frontLeftModule.setDesiredState(states[0]);
     backRightModule.setDesiredState(states[3]);
     backLeftModule.setDesiredState(states[2]);
+
+    field2d.setRobotPose(getCurrentPose());
   }
 
   public void resetPose(Pose2d pose2d) {

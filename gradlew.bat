@@ -26,10 +26,7 @@ if "%OS%"=="Windows_NT" setlocal
 
 set DIRNAME=%~dp0
 if "%DIRNAME%"=="" set DIRNAME=.
-<<<<<<< HEAD
-=======
 @rem This is normally unused
->>>>>>> wpi-2k24-beta3
 set APP_BASE_NAME=%~n0
 set APP_HOME=%DIRNAME%
 
