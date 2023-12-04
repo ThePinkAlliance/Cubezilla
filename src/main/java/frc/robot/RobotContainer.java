@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -75,11 +76,12 @@ public class RobotContainer {
     PathPlannerPath path = chooser.getSelected();
 
     // Sets the robot starting position the same as starting point on path.
-    swerveSubsystem.resetPose(path.getStartingDifferentialPose());
+    Pose2d path_pose = path.getStartingDifferentialPose();
+    swerveSubsystem.resetPose(new Pose2d(path_pose.getX(), path_pose.getY(), swerveSubsystem.getRotation()));
 
     return new FollowPathCommand(path, swerveSubsystem::getCurrentPose, swerveSubsystem::getSpeeds,
         swerveSubsystem::setStates,
-        new PPHolonomicDriveController(new PIDConstants(.3), new PIDConstants(.3),
+        new PPHolonomicDriveController(new PIDConstants(.8, 0.1, .5), new PIDConstants(1, 0, 0.0),
             Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond, Constants.DriveConstants.kBaseRadius),
         new ReplanningConfig(), swerveSubsystem);
   }

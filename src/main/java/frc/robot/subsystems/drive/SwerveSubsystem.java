@@ -11,9 +11,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -37,6 +39,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private SwerveDriveKinematics kinematics;
   private SwerveDrivePoseEstimator estimator;
+  private PIDController thetaController;
 
   private AHRS gyro;
   private Field2d field2d;
@@ -83,6 +86,8 @@ public class SwerveSubsystem extends SubsystemBase {
         new Pose2d());
 
     SmartDashboard.putData("Field", field2d);
+
+    this.thetaController = new PIDController(1, 0, 0.0);
 
     calibrateGyro();
   }
@@ -139,7 +144,27 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setStates(ChassisSpeeds speeds) {
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
+    // Looper is how far into the future are we looking
+    double looper = .25;
+    double angle_looper = .25;
+    Pose2d currentPose = getCurrentPose();
+    Pose2d desired = new Pose2d(currentPose.getX() + (speeds.vxMetersPerSecond *
+        looper),
+        currentPose.getY() + (speeds.vyMetersPerSecond * looper),
+        currentPose.getRotation().plus(Rotation2d.fromRadians(speeds.omegaRadiansPerSecond
+            * angle_looper)));
+
+    Twist2d twist_vel = currentPose.log(desired);
+    ChassisSpeeds updated_speeds = new ChassisSpeeds(twist_vel.dx / looper,
+        twist_vel.dy / looper,
+        twist_vel.dtheta / angle_looper);
+
+    double desired_rotation = getRotation().getRadians() + updated_speeds.omegaRadiansPerSecond;
+    double theta_power = thetaController.calculate(getRotation().getRadians(), desired_rotation);
+
+    // updated_speeds.omegaRadiansPerSecond = theta_power;
+
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(updated_speeds);
 
     SmartDashboard.putNumber("Front Left Angle Setpoint", states[1].angle.getRadians());
     SmartDashboard.putNumber("Front Right Angle Setpoint", states[0].angle.getRadians());
@@ -186,5 +211,6 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Back Right Angle Raw", (backRightModule.getRawAbsoluteAngularPosition()));
 
     field2d.setRobotPose(getCurrentPose());
+    estimator.update(getRotation(), getPositions());
   }
 }

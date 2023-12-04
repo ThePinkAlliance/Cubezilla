@@ -96,7 +96,7 @@ public class Constants {
     public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.98 + 3.14;// -0.09;
     public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -2.26 - 3.14;// 0.94;// 4.05 - 0.20;
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.71 + 3.14;// 0.71;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -1.00 - 3.14;// 5.27;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -0.79 - 3.14;// 5.27;
 
     // This is the max speed without load.
     public static final double kPhysicalMaxSpeedMetersPerSecond = 2.98704;
@@ -106,7 +106,7 @@ public class Constants {
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
         / 2.8;
     public static double kTeleDriveSpeedReduction = 1;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 1.2;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kTeleDriveMaxSpeedMetersPerSecond * 0.8;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.5;
   }
 }
