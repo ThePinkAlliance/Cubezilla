@@ -4,14 +4,8 @@
 
 package frc.robot.subsystems.drive;
 
-import java.util.List;
-
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -39,7 +33,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private SwerveDriveKinematics kinematics;
   private SwerveDrivePoseEstimator estimator;
-  private PIDController thetaController;
 
   private AHRS gyro;
   private Field2d field2d;
@@ -86,8 +79,6 @@ public class SwerveSubsystem extends SubsystemBase {
         new Pose2d());
 
     SmartDashboard.putData("Field", field2d);
-
-    this.thetaController = new PIDController(1, 0, 0.0);
 
     calibrateGyro();
   }
@@ -143,26 +134,31 @@ public class SwerveSubsystem extends SubsystemBase {
     this.gyro.reset();
   }
 
+  private Twist2d scaleTwist2d(Twist2d twist2d, double factor) {
+    return new Twist2d(twist2d.dx * factor, twist2d.dy * factor, twist2d.dtheta * factor);
+  }
+
   public void setStates(ChassisSpeeds speeds) {
     // Looper is how far into the future are we looking
     double looper = .25;
     double angle_looper = .25;
+
+    /*
+     * Check the angular drift with this solution & if I doesn't work explore the
+     * possiblity of steer error in swerve pods.
+     */
+    double gyro_update_rate = gyro.getRequestedUpdateRate() * (1 / 1000);
     Pose2d currentPose = getCurrentPose();
     Pose2d desired = new Pose2d(currentPose.getX() + (speeds.vxMetersPerSecond *
         looper),
         currentPose.getY() + (speeds.vyMetersPerSecond * looper),
-        currentPose.getRotation().plus(Rotation2d.fromRadians(speeds.omegaRadiansPerSecond
+        currentPose.getRotation().plus(Rotation2d.fromRadians(speeds.omegaRadiansPerSecond * gyro_update_rate
             * angle_looper)));
 
-    Twist2d twist_vel = currentPose.log(desired);
+    Twist2d twist_vel = scaleTwist2d(currentPose.log(desired), 1 / looper);
     ChassisSpeeds updated_speeds = new ChassisSpeeds(twist_vel.dx / looper,
         twist_vel.dy / looper,
         twist_vel.dtheta / angle_looper);
-
-    double desired_rotation = getRotation().getRadians() + updated_speeds.omegaRadiansPerSecond;
-    double theta_power = thetaController.calculate(getRotation().getRadians(), desired_rotation);
-
-    // updated_speeds.omegaRadiansPerSecond = theta_power;
 
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(updated_speeds);
 
