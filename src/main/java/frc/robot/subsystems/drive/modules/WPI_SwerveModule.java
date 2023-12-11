@@ -85,6 +85,11 @@ public class WPI_SwerveModule implements SwerveModule {
     return driveMotor.getSelectedSensorVelocity() * Constants.ModuleConstants.kDriveMotorGearRatio;
   }
 
+  @Override
+  public double getSteerError() {
+    return steerController.getPositionError();
+  }
+
   /**
    * Returns the velocity of the steer motor in rad/sec.
    */

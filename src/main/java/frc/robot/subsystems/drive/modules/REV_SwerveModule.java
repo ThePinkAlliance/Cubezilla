@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.lib.Gains;
 import frc.robot.subsystems.drive.SwerveModule;
@@ -93,11 +94,8 @@ public class REV_SwerveModule implements SwerveModule {
 
   @Override
   public double getDriveVelocity() {
-    /*
-     * It might be necessary to change the constant because it does not take into
-     * account the gear ratio.
-     */
-    return driveMotor.getEncoder().getVelocity() * Constants.ModuleConstants.kDriveMotorGearRatio;
+    return ((driveMotor.getEncoder().getVelocity() / 60) * Constants.ModuleConstants.kDriveMotorGearRatio)
+        * (Constants.ModuleConstants.kWheelDiameterMeters * Math.PI);
   }
 
   /**
@@ -140,6 +138,11 @@ public class REV_SwerveModule implements SwerveModule {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getSteerPosition()));
   }
 
+  @Override
+  public double getSteerError() {
+    return steerController.getPositionError();
+  }
+
   /**
    * Sets the current module state to the desired one.
    * 
@@ -148,10 +151,13 @@ public class REV_SwerveModule implements SwerveModule {
   @Override
   public void setDesiredState(SwerveModuleState state) {
     state = SwerveModuleState.optimize(state, getState().angle);
-    driveMotor.set(
-        state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+
+    driveMotor
+        .setVoltage((state.speedMetersPerSecond /
+            Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond) * 12);
 
     double output = steerController.calculate(getSteerPosition(), state.angle.getRadians());
+    SmartDashboard.putNumber(this.steerMotor.getDeviceId() + ": Angle Difference", output);
     steerMotor.set(output);
   }
 

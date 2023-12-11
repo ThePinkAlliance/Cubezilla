@@ -41,6 +41,13 @@ public class JoystickDrive extends Command {
     swerveSubsystem.resetGyro();
   }
 
+  private double throttleLimiter(double input) {
+    double gain = .5;
+
+    return input;
+    // return gain * (input * input * input) + (1 - gain) * input;
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -51,24 +58,24 @@ public class JoystickDrive extends Command {
     // Square the controller input while preserving the sign.
     x = Math.copySign(x * x, x) * 1;
     y = Math.copySign(y * y, y) * 1;
-    r = Math.copySign(r * r, r) * -1;
+    r = r * -1;
 
     // Limit the max acceleration and convert to meters.
-    x = xLimiter.calculate(x) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    y = yLimiter.calculate(y) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    r = r * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+    x = (throttleLimiter(x) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    y = (throttleLimiter(y) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    r = throttleLimiter(r) * Constants.DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond;
 
     // Convert from robot centric to field centric.
     Rotation2d robotAngle = swerveSubsystem.getRotation();
 
-    double xField = x * robotAngle.getSin() + y * robotAngle.getCos();
-    double yField = x * robotAngle.getCos() + y * -robotAngle.getSin();
+    // double xField = x * robotAngle.getSin() + y * robotAngle.getCos();
+    // double yField = x * robotAngle.getCos() + y * -robotAngle.getSin();
 
     SmartDashboard.putNumber("Robot Heading", robotAngle.getDegrees());
-    SmartDashboard.putNumber("xField", xField);
-    SmartDashboard.putNumber("yField", yField);
+    // SmartDashboard.putNumber("xField", xField);
+    // SmartDashboard.putNumber("yField", yField);
 
-    swerveSubsystem.setStates(new ChassisSpeeds(xField, yField, r));
+    swerveSubsystem.setStates(new ChassisSpeeds(y, x, r));
   }
 
   // Called once the command ends or is interrupted.

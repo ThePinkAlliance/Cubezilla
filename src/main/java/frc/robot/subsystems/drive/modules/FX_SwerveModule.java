@@ -83,6 +83,11 @@ public class FX_SwerveModule implements SwerveModule {
   }
 
   @Override
+  public double getSteerError() {
+    return steerController.getPositionError();
+  }
+
+  @Override
   public double getRawAbsoluteAngularPosition() {
     return Math.toRadians(canCoder.getAbsolutePosition());
   }

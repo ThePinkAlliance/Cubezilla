@@ -16,7 +16,7 @@ import frc.robot.lib.Gains;
 public class Constants {
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4.09);
-    public static final double kDriveMotorGearRatio = 1 / 5.14;
+    public static final double kDriveMotorGearRatio = (16 / 48) * (28 / 16) * (15 / 45);
     public static final double kTurningMotorGearRatio = 1 / 12.8;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI
         * kWheelDiameterMeters;
@@ -24,7 +24,7 @@ public class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.47;
-    public static final Gains kSteerGains = new Gains(.45, 0.02, 0);
+    public static final Gains kSteerGains = new Gains(.45, 0.01, 0);
   }
 
   public static final class OIConstants {
@@ -50,8 +50,9 @@ public class Constants {
      * drivetrain and
      * specifies PID controllers in x & y axies.
      */
-    public static HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(new PIDConstants(0),
-        new PIDConstants(0),
+    public static HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(
+        new PIDConstants(3.9, 0, .27), // 0.006
+        new PIDConstants(5.5, 0, 0.000),
         DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kBaseRadius,
         new ReplanningConfig());
 
@@ -96,17 +97,16 @@ public class Constants {
     public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.98 + 3.14;// -0.09;
     public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -2.26 - 3.14;// 0.94;// 4.05 - 0.20;
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.71 + 3.14;// 0.71;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -0.79 - 3.14;// 5.27;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.2 + 3.14;// -0.79 - 3.14;// 5.27;
 
     // This is the max speed without load.
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 2.98704;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 2.91;// 2.98704;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1; // 0.96
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
-        / 2.8;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
     public static double kTeleDriveSpeedReduction = 1;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kTeleDriveMaxSpeedMetersPerSecond * 0.8;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.5;
   }
 }

@@ -6,6 +6,7 @@ package frc.robot.subsystems.drive;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,7 +15,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.datalog.DataLog;
+import edu.wpi.first.util.datalog.DoubleLogEntry;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,11 +38,17 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private SwerveDriveKinematics kinematics;
   private SwerveDrivePoseEstimator estimator;
+  private PoseEstimator poseEstimator;
 
   private AHRS gyro;
   private Field2d field2d;
-
   private Dashboard dashboard;
+  // private DataLog log;
+  // private DoubleLogEntry xLogEntry;
+  // private DoubleLogEntry yLogEntry;
+  private SwerveModule[] modules;
+  private SwerveModulePosition[] lastModulePositionsMeters;
+  private Rotation2d lastGyroYaw;
 
   /**
    * Creates a Swerve subsystem with the added kinematics.
@@ -45,7 +56,14 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param kinematics
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
-    gyro = new AHRS(SPI.Port.kMXP);
+    // DataLogManager.start();
+
+    // log = DataLogManager.getLog();
+
+    // xLogEntry = new DoubleLogEntry(log, "/dt/xPos");
+    // yLogEntry = new DoubleLogEntry(log, "/dt/yPos");
+
+    this.gyro = new AHRS(SPI.Port.kMXP);
     this.field2d = new Field2d();
     this.dashboard = new Dashboard("Swerve");
 
@@ -76,21 +94,15 @@ public class SwerveSubsystem extends SubsystemBase {
             frontLeftModule.getPosition(), backRightModule.getPosition(),
             backLeftModule
                 .getPosition() },
-        new Pose2d());
+        new Pose2d(), VecBuilder.fill(0.3, 0.3, 0.3),
+        VecBuilder.fill(0.9, 0.9, 0.9));
+    this.poseEstimator = new PoseEstimator(VecBuilder.fill(0.1, 0.1, 0.1));
+    this.modules = new SwerveModule[] { frontRightModule, frontLeftModule, backRightModule, backLeftModule };
+    this.lastModulePositionsMeters = getPositions();
 
     SmartDashboard.putData("Field", field2d);
 
     calibrateGyro();
-  }
-
-  /**
-   * Configures auto builder for pathplanner
-   */
-  public void configureAuto() {
-    AutoBuilder.configureHolonomic(this::getCurrentPose, this::resetPose,
-        this::getSpeeds, this::setStates,
-        Constants.DriveConstants.kPathFollowerConfig,
-        this);
   }
 
   public SwerveModulePosition[] getPositions() {
@@ -140,32 +152,25 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setStates(ChassisSpeeds speeds) {
     // Looper is how far into the future are we looking
-    double looper = .25;
-    double angle_looper = .25;
+    double looper = .01;
 
     /*
      * Check the angular drift with this solution & if I doesn't work explore the
      * possiblity of steer error in swerve pods.
      */
-    double gyro_update_rate = gyro.getRequestedUpdateRate() * (1 / 1000);
+    double gyro_update_rate = gyro.getRequestedUpdateRate();
     Pose2d currentPose = getCurrentPose();
     Pose2d desired = new Pose2d(currentPose.getX() + (speeds.vxMetersPerSecond *
         looper),
         currentPose.getY() + (speeds.vyMetersPerSecond * looper),
-        currentPose.getRotation().plus(Rotation2d.fromRadians(speeds.omegaRadiansPerSecond * gyro_update_rate
-            * angle_looper)));
+        currentPose.getRotation().plus(Rotation2d.fromRadians(speeds.omegaRadiansPerSecond)));
 
-    Twist2d twist_vel = scaleTwist2d(currentPose.log(desired), 1 / looper);
+    Twist2d twist_vel = scaleTwist2d(currentPose.log(desired), 1);
     ChassisSpeeds updated_speeds = new ChassisSpeeds(twist_vel.dx / looper,
         twist_vel.dy / looper,
-        twist_vel.dtheta / angle_looper);
+        twist_vel.dtheta);
 
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(updated_speeds);
-
-    SmartDashboard.putNumber("Front Left Angle Setpoint", states[1].angle.getRadians());
-    SmartDashboard.putNumber("Front Right Angle Setpoint", states[0].angle.getRadians());
-    SmartDashboard.putNumber("Back Left Angle Setpoint", states[2].angle.getRadians());
-    SmartDashboard.putNumber("Back Right Angle Setpoint", states[3].angle.getRadians());
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
     dashboard.putObject("Desired Front Left Power", states[1].speedMetersPerSecond);
     dashboard.putObject("Desired Front Right Power", states[0].speedMetersPerSecond);
@@ -182,6 +187,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d pose2d) {
     estimator.resetPosition(getRotation(), getPositions(), pose2d);
+    poseEstimator.resetPose(pose2d);
   }
 
   public ChassisSpeeds getSpeeds() {
@@ -189,24 +195,58 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Pose2d getCurrentPose() {
-    return estimator.getEstimatedPosition();
+    // return estimator.getEstimatedPosition();
+    return poseEstimator.getLatestPose();
   }
+
+  private double lastEpoch = 0;
+  private double lastAngularPos = 0;
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
-    SmartDashboard.putNumber("Front Right Angle", (frontRightModule.getSteerPosition()));
-    SmartDashboard.putNumber("Back Left Angle", (backLeftModule.getSteerPosition()));
-    SmartDashboard.putNumber("Back Right Angle", (backRightModule.getSteerPosition()));
-    SmartDashboard.putNumber("Front Left Angle", (frontLeftModule.getSteerPosition()));
+    SmartDashboard.putNumber("Front Right Velocity", (frontRightModule.getDriveVelocity()));
+    SmartDashboard.putNumber("Back Left Velocity", (backLeftModule.getDriveVelocity()));
+    SmartDashboard.putNumber("Back Right Velocity", (backRightModule.getDriveVelocity()));
+    SmartDashboard.putNumber("Front Left Velocity", (frontLeftModule.getDriveVelocity()));
 
-    SmartDashboard.putNumber("Front Left Angle Raw", (frontLeftModule.getRawAbsoluteAngularPosition()));
-    SmartDashboard.putNumber("Front Right Angle Raw", (frontRightModule.getRawAbsoluteAngularPosition()));
-    SmartDashboard.putNumber("Back Left Angle Raw", (backLeftModule.getRawAbsoluteAngularPosition()));
-    SmartDashboard.putNumber("Back Right Angle Raw", (backRightModule.getRawAbsoluteAngularPosition()));
+    if (lastEpoch != 0) {
+      double currentAngularPos = gyro.getAngle();
+      SmartDashboard.putNumber("Angular Vel Rad/s",
+          ((currentAngularPos - lastAngularPos) * (Math.PI / 180)) / (Timer.getFPGATimestamp() - lastEpoch));
+      lastAngularPos = currentAngularPos;
+    }
+
+    SmartDashboard.putNumber("Back Right Heading", backRightModule.getRawAbsoluteAngularPosition());
+    SmartDashboard.putNumber("Heading", getHeading());
+
+    Pose2d pose = getCurrentPose();
+
+    // if (pose.getX() != 0 && pose.getY() != 0) {
+    // xLogEntry.append(getCurrentPose().getX());
+    // yLogEntry.append(getCurrentPose().getY());
+    // }
+
+    SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
+    for (int i = 0; i < 4; i++) {
+      wheelDeltas[i] = new SwerveModulePosition(
+          (modules[i].getPosition().distanceMeters - lastModulePositionsMeters[i].distanceMeters),
+          modules[i].getPosition().angle);
+      lastModulePositionsMeters[i] = modules[i].getPosition();
+    }
+
+    var twist = kinematics.toTwist2d(wheelDeltas);
+    Rotation2d gyroYaw = getRotation();
+    if (lastGyroYaw != null) {
+      twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastGyroYaw).getRadians());
+      lastGyroYaw = gyroYaw;
+      poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
+    }
 
     field2d.setRobotPose(getCurrentPose());
     estimator.update(getRotation(), getPositions());
+
+    lastEpoch = Timer.getFPGATimestamp();
   }
 }
