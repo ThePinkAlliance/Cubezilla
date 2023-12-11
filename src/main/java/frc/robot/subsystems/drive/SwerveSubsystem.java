@@ -238,11 +238,13 @@ public class SwerveSubsystem extends SubsystemBase {
 
     var twist = kinematics.toTwist2d(wheelDeltas);
     Rotation2d gyroYaw = getRotation();
+
     if (lastGyroYaw != null) {
       twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastGyroYaw).getRadians());
-      lastGyroYaw = gyroYaw;
-      poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
     }
+
+    lastGyroYaw = gyroYaw;
+    poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
 
     field2d.setRobotPose(getCurrentPose());
     estimator.update(getRotation(), getPositions());
