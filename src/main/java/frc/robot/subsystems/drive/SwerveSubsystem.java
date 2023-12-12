@@ -38,7 +38,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private SwerveDriveKinematics kinematics;
   private SwerveDrivePoseEstimator estimator;
-  private PoseEstimator poseEstimator;
 
   private AHRS gyro;
   private Field2d field2d;
@@ -94,9 +93,8 @@ public class SwerveSubsystem extends SubsystemBase {
             frontLeftModule.getPosition(), backRightModule.getPosition(),
             backLeftModule
                 .getPosition() },
-        new Pose2d(), VecBuilder.fill(0.3, 0.3, 0.3),
+        new Pose2d(), VecBuilder.fill(0.4, 0.4, 0.4),
         VecBuilder.fill(0.9, 0.9, 0.9));
-    this.poseEstimator = new PoseEstimator(VecBuilder.fill(0.1, 0.1, 0.1));
     this.modules = new SwerveModule[] { frontRightModule, frontLeftModule, backRightModule, backLeftModule };
     this.lastModulePositionsMeters = getPositions();
 
@@ -187,7 +185,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d pose2d) {
     estimator.resetPosition(getRotation(), getPositions(), pose2d);
-    poseEstimator.resetPose(pose2d);
   }
 
   public ChassisSpeeds getSpeeds() {
@@ -195,8 +192,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public Pose2d getCurrentPose() {
-    // return estimator.getEstimatedPosition();
-    return poseEstimator.getLatestPose();
+    return estimator.getEstimatedPosition();
   }
 
   private double lastEpoch = 0;
@@ -227,24 +223,6 @@ public class SwerveSubsystem extends SubsystemBase {
     // xLogEntry.append(getCurrentPose().getX());
     // yLogEntry.append(getCurrentPose().getY());
     // }
-
-    SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
-    for (int i = 0; i < 4; i++) {
-      wheelDeltas[i] = new SwerveModulePosition(
-          (modules[i].getPosition().distanceMeters - lastModulePositionsMeters[i].distanceMeters),
-          modules[i].getPosition().angle);
-      lastModulePositionsMeters[i] = modules[i].getPosition();
-    }
-
-    var twist = kinematics.toTwist2d(wheelDeltas);
-    Rotation2d gyroYaw = getRotation();
-
-    if (lastGyroYaw != null) {
-      twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastGyroYaw).getRadians());
-    }
-
-    lastGyroYaw = gyroYaw;
-    poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
 
     field2d.setRobotPose(getCurrentPose());
     estimator.update(getRotation(), getPositions());

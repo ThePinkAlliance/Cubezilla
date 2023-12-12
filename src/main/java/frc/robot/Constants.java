@@ -15,8 +15,8 @@ import frc.robot.lib.Gains;
 /** Add your docs here. */
 public class Constants {
   public static final class ModuleConstants {
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(4.09);
-    public static final double kDriveMotorGearRatio = (16 / 48) * (28 / 16) * (15 / 45);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.80);
+    public static final double kDriveMotorGearRatio = 0.1944444444;
     public static final double kTurningMotorGearRatio = 1 / 12.8;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI
         * kWheelDiameterMeters;
@@ -100,12 +100,12 @@ public class Constants {
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.2 + 3.14;// -0.79 - 3.14;// 5.27;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 2.91;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 18; // 18 rad/sec
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1; // 0.96
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
     public static double kTeleDriveSpeedReduction = 1;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.25;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.5;
   }
 }

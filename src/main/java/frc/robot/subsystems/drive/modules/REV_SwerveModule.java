@@ -75,8 +75,8 @@ public class REV_SwerveModule implements SwerveModule {
      * I'm going to remove factor 0f 42 to see if the converion is done by revlib
      * already
      */
-    return ((driveMotor.getEncoder().getPosition()) * Constants.ModuleConstants.kDriveMotorGearRatio)
-        * (Constants.ModuleConstants.kWheelDiameterMeters * Math.PI);
+    return (((driveMotor.getEncoder().getPosition()) * Constants.ModuleConstants.kDriveMotorGearRatio)
+        * (Constants.ModuleConstants.kWheelDiameterMeters * Math.PI)) * (1 / 1.305);
   }
 
   /*

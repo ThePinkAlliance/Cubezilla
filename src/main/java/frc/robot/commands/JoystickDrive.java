@@ -61,9 +61,9 @@ public class JoystickDrive extends Command {
     r = r * -1;
 
     // Limit the max acceleration and convert to meters.
-    x = (throttleLimiter(x) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
-    y = (throttleLimiter(y) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
-    r = throttleLimiter(r) * Constants.DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond;
+    x = (xLimiter.calculate(throttleLimiter(x)) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    y = (yLimiter.calculate(throttleLimiter(y)) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond);
+    r = throttleLimiter(r) * Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
 
     // Convert from robot centric to field centric.
     Rotation2d robotAngle = swerveSubsystem.getRotation();
