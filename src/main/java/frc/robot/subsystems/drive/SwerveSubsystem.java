@@ -6,6 +6,7 @@ package frc.robot.subsystems.drive;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -42,12 +43,15 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS gyro;
   private Field2d field2d;
   private Dashboard dashboard;
-  // private DataLog log;
-  // private DoubleLogEntry xLogEntry;
-  // private DoubleLogEntry yLogEntry;
+  private DataLog log;
+  private DoubleLogEntry xLogEntry;
+  private DoubleLogEntry yLogEntry;
   private SwerveModule[] modules;
   private SwerveModulePosition[] lastModulePositionsMeters;
   private Rotation2d lastGyroYaw;
+  private final double defaultKp = 10;
+  private final double defaultKi = 0;
+  private final double defaultKd = 0.35;
 
   /**
    * Creates a Swerve subsystem with the added kinematics.
@@ -55,12 +59,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param kinematics
    */
   public SwerveSubsystem(SwerveDriveKinematics kinematics) {
-    // DataLogManager.start();
+    DataLogManager.start();
 
-    // log = DataLogManager.getLog();
+    log = DataLogManager.getLog();
 
-    // xLogEntry = new DoubleLogEntry(log, "/dt/xPos");
-    // yLogEntry = new DoubleLogEntry(log, "/dt/yPos");
+    xLogEntry = new DoubleLogEntry(log, "/dt/xPos");
+    yLogEntry = new DoubleLogEntry(log, "/dt/yPos");
 
     this.gyro = new AHRS(SPI.Port.kMXP);
     this.field2d = new Field2d();
@@ -93,12 +97,16 @@ public class SwerveSubsystem extends SubsystemBase {
             frontLeftModule.getPosition(), backRightModule.getPosition(),
             backLeftModule
                 .getPosition() },
-        new Pose2d(), VecBuilder.fill(0.4, 0.4, 0.4),
+        new Pose2d(), VecBuilder.fill(0.313, 0.314, 0.4),
         VecBuilder.fill(0.9, 0.9, 0.9));
     this.modules = new SwerveModule[] { frontRightModule, frontLeftModule, backRightModule, backLeftModule };
     this.lastModulePositionsMeters = getPositions();
 
     SmartDashboard.putData("Field", field2d);
+
+    SmartDashboard.putNumber("Kp", 10);
+    SmartDashboard.putNumber("Ki", 0);
+    SmartDashboard.putNumber("Kd", 0.40);
 
     calibrateGyro();
   }
@@ -219,14 +227,19 @@ public class SwerveSubsystem extends SubsystemBase {
 
     Pose2d pose = getCurrentPose();
 
-    // if (pose.getX() != 0 && pose.getY() != 0) {
-    // xLogEntry.append(getCurrentPose().getX());
-    // yLogEntry.append(getCurrentPose().getY());
-    // }
+    if (pose.getX() != 0 && pose.getY() != 0) {
+      xLogEntry.append(getCurrentPose().getX());
+      yLogEntry.append(getCurrentPose().getY());
+    }
 
     field2d.setRobotPose(getCurrentPose());
     estimator.update(getRotation(), getPositions());
 
     lastEpoch = Timer.getFPGATimestamp();
+
+    double kP = SmartDashboard.getNumber("Kp", defaultKp);
+    double kI = SmartDashboard.getNumber("Ki", defaultKi);
+    double kD = SmartDashboard.getNumber("Kd", defaultKd);
+
   }
 }

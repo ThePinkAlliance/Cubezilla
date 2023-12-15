@@ -56,8 +56,8 @@ public class JoystickDrive extends Command {
     double r = Math.abs(rotInput.get()) > Constants.OIConstants.kJoystickDeadband ? rotInput.get() : 0;
 
     // Square the controller input while preserving the sign.
-    x = Math.copySign(x * x, x) * 1;
-    y = Math.copySign(y * y, y) * 1;
+    x = Math.copySign(x * x, x) * -1;
+    y = Math.copySign(y * y, y) * -1;
     r = r * -1;
 
     // Limit the max acceleration and convert to meters.

@@ -60,7 +60,7 @@ public class RobotContainer {
     this.chooser.setDefaultOption("Crazy", PathPlannerPath.fromPathFile("crazy"));
     this.chooser.addOption("Straight", PathPlannerPath.fromPathFile("Straight"));
     this.chooser.addOption("New New Test", PathPlannerPath.fromPathFile("New New Path"));
-
+    this.chooser.addOption("Slalom", PathPlannerPath.fromPathFile("Slalom"));
     SmartDashboard.putData(chooser);
 
     AutoBuilder.configureHolonomic(swerveSubsystem::getCurrentPose, swerveSubsystem::resetPose,

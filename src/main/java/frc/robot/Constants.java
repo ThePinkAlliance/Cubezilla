@@ -51,10 +51,10 @@ public class Constants {
      * specifies PID controllers in x & y axies.
      */
     public static HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(
-        new PIDConstants(3.9, 0, .27), // 0.006
+        new PIDConstants(4, 0, .25), // 0.006 // kp: 4.5, kD .35
         new PIDConstants(5.5, 0, 0.000),
         DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kBaseRadius,
-        new ReplanningConfig());
+        new ReplanningConfig(), 0.02);
 
     public static final int kFrontLeftDriveMotorPort = 15;
     public static final int kBackLeftDriveMotorPort = 17;
@@ -105,7 +105,7 @@ public class Constants {
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1; // 0.96
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
     public static double kTeleDriveSpeedReduction = 1;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.25;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.55;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.5;
   }
 }
