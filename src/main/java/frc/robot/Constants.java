@@ -24,7 +24,13 @@ public class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.47;
-    public static final Gains kSteerGains = new Gains(.45, 0.01, 0);
+
+    public static final Gains kBackLeftSteerGains = new Gains(.45, 0.01, 0);
+    public static final Gains kBackRightSteerGains = new Gains(.45, 0.01, 0);
+
+    public static final Gains kFrontRightSteerGains = new Gains(.45, 0.01, 0);
+    public static final Gains kFrontLeftSteerGains = new Gains(.45, 0.01, 0);
+
   }
 
   public static final class OIConstants {
