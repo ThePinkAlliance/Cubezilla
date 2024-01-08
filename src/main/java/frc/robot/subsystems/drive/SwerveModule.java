@@ -12,6 +12,8 @@ public interface SwerveModule {
 
   public double getSteerVelocity();
 
+  public double getSteerError();
+
   /**
    * Reset the drive & steer encoders.
    */

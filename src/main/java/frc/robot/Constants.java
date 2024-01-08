@@ -4,16 +4,19 @@
 
 package frc.robot;
 
-import com.ThePinkAlliance.core.util.Gains;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+import frc.robot.lib.Gains;
 
 /** Add your docs here. */
 public class Constants {
   public static final class ModuleConstants {
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(4.09);
-    public static final double kDriveMotorGearRatio = 1 / 8.14;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.80);
+    public static final double kDriveMotorGearRatio = 0.1944444444;
     public static final double kTurningMotorGearRatio = 1 / 12.8;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI
         * kWheelDiameterMeters;
@@ -21,7 +24,13 @@ public class Constants {
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.47;
-    public static final Gains kSteerGains = new Gains(.45, 0.02, 0);
+
+    public static final Gains kBackLeftSteerGains = new Gains(.45, 0.01, 0);
+    public static final Gains kBackRightSteerGains = new Gains(.45, 0.01, 0);
+
+    public static final Gains kFrontRightSteerGains = new Gains(.45, 0.01, 0);
+    public static final Gains kFrontLeftSteerGains = new Gains(.45, 0.01, 0);
+
   }
 
   public static final class OIConstants {
@@ -41,6 +50,17 @@ public class Constants {
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(kWheelBase / 2, kTrackWidth / 2));
+
+    /**
+     * HolonomicPathFollowerConfig gives pathplanner information about the
+     * drivetrain and
+     * specifies PID controllers in x & y axies.
+     */
+    public static HolonomicPathFollowerConfig kPathFollowerConfig = new HolonomicPathFollowerConfig(
+        new PIDConstants(4, 0, .25), // 0.006 // kp: 4.5, kD .35
+        new PIDConstants(5.5, 0, 0.000),
+        DriveConstants.kPhysicalMaxSpeedMetersPerSecond, DriveConstants.kBaseRadius,
+        new ReplanningConfig(), 0.02);
 
     public static final int kFrontLeftDriveMotorPort = 15;
     public static final int kBackLeftDriveMotorPort = 17;
@@ -83,17 +103,15 @@ public class Constants {
     public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.98 + 3.14;// -0.09;
     public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -2.26 - 3.14;// 0.94;// 4.05 - 0.20;
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.71 + 3.14;// 0.71;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -1.00 - 3.14;// 5.27;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 1.2 + 3.14;// -0.79 - 3.14;// 5.27;
 
-    // This is the max speed without load.
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 6;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 2.91;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 18; // 18 rad/sec
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 1; // 0.96
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond
-        / 2.8;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond;
     public static double kTeleDriveSpeedReduction = 1;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 2.5;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.55;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3.5;
   }
 }

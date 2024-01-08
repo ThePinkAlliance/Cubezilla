@@ -4,14 +4,15 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.IntakeSubsystem;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-public class Intake extends CommandBase {
+public class Intake extends Command {
   private IntakeSubsystem subsystem;
   private TalonFX motor;
   private double speed;
+
   /** Creates a new Intake. */
   public Intake(IntakeSubsystem subsystem, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,7 +24,7 @@ public class Intake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,7 +36,7 @@ public class Intake extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+
   }
 
   // Returns true when the command should end.

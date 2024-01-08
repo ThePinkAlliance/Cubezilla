@@ -170,3 +170,8 @@ out/
 
 # Simulation GUI and other tools window save file
 *-window.json
+<<<<<<< HEAD
+
+BuildConstants.java
+=======
+>>>>>>> wpi-2k24-beta3

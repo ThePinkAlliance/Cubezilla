@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.drive.modules;
 
-import com.ThePinkAlliance.core.util.Gains;
-import com.ThePinkAlliance.core.util.GainsFX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.WPI_CANCoder;
@@ -15,6 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.lib.Gains;
+import frc.robot.lib.GainsFX;
 import frc.robot.subsystems.drive.SwerveModule;
 
 /** Add your docs here. */
@@ -83,6 +83,11 @@ public class FX_SwerveModule implements SwerveModule {
   }
 
   @Override
+  public double getSteerError() {
+    return steerController.getPositionError();
+  }
+
+  @Override
   public double getRawAbsoluteAngularPosition() {
     return Math.toRadians(canCoder.getAbsolutePosition());
   }
@@ -93,7 +98,7 @@ public class FX_SwerveModule implements SwerveModule {
      * It might be necessary to change the constant because it does not take into
      * account the gear ratio.
      */
-    return driveMotor.getSelectedSensorVelocity() * 0.0015585245;
+    return driveMotor.getSelectedSensorVelocity() * Constants.ModuleConstants.kDriveMotorGearRatio;
   }
 
   /**
